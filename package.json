@@ -31,8 +31,7 @@
     "files": [
       "main/**/*",
       "src/**/*",
-      "assets/**/*",
-      "preload.js"
+      "assets/**/*"
     ],
     "extraResources": [
       {

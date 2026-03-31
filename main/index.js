@@ -61,7 +61,7 @@ function createWindow() {
     },
     backgroundColor: saved.theme === 'light' ? '#f0f0f5' : '#0f0f11',
     webPreferences: {
-      preload: path.join(__dirname, '../preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
     },

@@ -50,9 +50,7 @@ jobs:
           name: dist-${{ matrix.os }}
           path: |
             dist/*.exe
-            dist/*.exe.blockmap
             dist/*.dmg
-            dist/*.dmg.blockmap
             dist/*.AppImage
             dist/*.deb
           retention-days: 7
