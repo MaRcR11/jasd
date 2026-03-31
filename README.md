@@ -9,6 +9,10 @@
 
 A fast, clean desktop app for downloading videos from YouTube and hundreds of other sites.
 
+<p align="center">
+  <video src="https://github.com/MaRcR11/jasd/raw/main/assets/intro.mp4" width="720" controls></video>
+</p>
+
 ---
 
 ## Features
