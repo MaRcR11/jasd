@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>JASD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="titlebar" id="titlebar">
+      <div class="tb-logo" style="-webkit-app-region: no-drag">
+        <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="7" fill="#5b7cf6" />
+          <path d="M10 8l14 8-14 8V8z" fill="white" />
+        </svg>
+        <span class="tb-appname">JASD</span>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <nav class="sidenav">
+          <button class="nav-item active" data-view="download">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M12 3v14m-6-6 6 6 6-6" />
+              <line x1="4" y1="21" x2="20" y2="21" />
+            </svg>
+            <span data-i18n="nav_download">Download</span>
+          </button>
+          <button class="nav-item" data-view="queue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="3" width="18" height="4" rx="1" />
+              <rect x="3" y="10" width="18" height="4" rx="1" />
+              <rect x="3" y="17" width="12" height="4" rx="1" />
+            </svg>
+            <span data-i18n="nav_queue">Queue</span>
+            <span class="badge" id="queueBadge" style="display: none">0</span>
+          </button>
+          <button class="nav-item" data-view="settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"
+              />
+            </svg>
+            <span data-i18n="nav_settings">Settings</span>
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <span class="app-ver-text" id="appVerText">JASD</span>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section class="view active" id="view-download">
+          <div class="dl-scroll">
+            <div class="url-wrap">
+              <div class="url-bar">
+                <svg
+                  class="url-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input
+                  type="text"
+                  id="urlInput"
+                  class="url-input"
+                  data-i18n-placeholder="url_placeholder"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <button class="btn-icon" id="btnPaste" title="Paste from clipboard">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
+                    <rect x="8" y="2" width="8" height="4" rx="1" />
+                  </svg>
+                </button>
+                <button class="btn-fetch" id="btnFetch">
+                  <span data-i18n="btn_fetch">Fetch</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="loading-state" id="loadingState" style="display: none">
+              <div class="spinner"></div>
+              <span data-i18n="fetching">Fetching media info…</span>
+            </div>
+
+            <div class="info-card" id="infoCard" style="display: none">
+              <div class="info-thumb-wrap">
+                <img class="info-thumb" id="infoThumb" src="" alt="" />
+                <div class="info-duration" id="infoDuration"></div>
+              </div>
+              <div class="info-meta">
+                <div class="info-title" id="infoTitle"></div>
+                <div class="info-sub" id="infoSub"></div>
+              </div>
+            </div>
+
+            <div class="options-panel" id="optionsPanel" style="display: none">
+              <div class="tab-bar">
+                <button class="tab active" data-tab="media" data-i18n="tab_media">Media</button>
+                <button class="tab" data-tab="options" data-i18n="tab_options">Options</button>
+              </div>
+
+              <div class="tab-body active" id="tab-media">
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_mode">Mode</span>
+                  <div class="toggle-group" style="margin-left: auto">
+                    <button class="tgl active" id="modeVideo" data-i18n="mode_video">
+                      Video + Audio
+                    </button>
+                    <button class="tgl" id="modeAudio" data-i18n="mode_audio">Audio Only</button>
+                  </div>
+                </div>
+
+                <div id="videoSection">
+                  <div class="field-row">
+                    <span class="field-label" data-i18n="label_format">Format</span>
+                    <select
+                      id="containerSelect"
+                      class="sel"
+                      style="margin-left: auto; max-width: 200px"
+                    >
+                      <option value="mp4">MP4</option>
+                      <option value="mkv">MKV</option>
+                      <option value="webm">WebM</option>
+                      <option value="mov">MOV</option>
+                    </select>
+                  </div>
+                  <div class="field-row" id="videoAudioQualRow">
+                    <span class="field-label" data-i18n="label_video_audio_q">Audio Quality</span>
+                    <select
+                      id="videoAudioQualSelect"
+                      class="sel"
+                      style="margin-left: auto; max-width: 200px"
+                    >
+                      <option value="0" data-i18n="aud_best">Best (VBR 0)</option>
+                      <option value="2" data-i18n="aud_high">High (VBR 2)</option>
+                      <option value="5" data-i18n="aud_mid">Medium (VBR 5)</option>
+                      <option value="128K">128 kbps</option>
+                      <option value="192K">192 kbps</option>
+                      <option value="320K">320 kbps</option>
+                    </select>
+                  </div>
+                  <div class="field-row">
+                    <span class="field-label" data-i18n="label_quality">Video Quality</span>
+                    <select id="fmtSelect" class="sel" style="margin-left: auto; max-width: 200px">
+                      <option value="bestvideo+bestaudio/best">Best</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div id="audioSection" style="display: none">
+                  <div class="field-row">
+                    <span class="field-label" data-i18n="label_format">Format</span>
+                    <select
+                      id="audioFmtSelect"
+                      class="sel"
+                      style="margin-left: auto; max-width: 200px"
+                    >
+                      <option value="mp3">MP3</option>
+                      <option value="aac">AAC</option>
+                      <option value="flac">FLAC</option>
+                      <option value="opus">Opus</option>
+                      <option value="wav">WAV</option>
+                      <option value="m4a">M4A</option>
+                    </select>
+                  </div>
+                  <div class="field-row">
+                    <span class="field-label" data-i18n="label_audio_quality">Audio Quality</span>
+                    <select
+                      id="audioQualSelect"
+                      class="sel"
+                      style="margin-left: auto; max-width: 200px"
+                    >
+                      <option value="0" data-i18n="aud_best">Best (VBR 0)</option>
+                      <option value="2" data-i18n="aud_high">High (VBR 2)</option>
+                      <option value="5" data-i18n="aud_mid">Medium (VBR 5)</option>
+                      <option value="128K">128 kbps</option>
+                      <option value="192K">192 kbps</option>
+                      <option value="320K">320 kbps</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-body" id="tab-options">
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_embed_thumb">Embed Thumbnail</span>
+                  <label class="switch" style="margin-left: auto">
+                    <input type="checkbox" id="chkThumb" /><span class="slider"></span>
+                  </label>
+                </div>
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_embed_meta">Embed Metadata</span>
+                  <label class="switch" style="margin-left: auto">
+                    <input type="checkbox" id="chkMeta" checked /><span class="slider"></span>
+                  </label>
+                </div>
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_filename">Custom Filename</span>
+                  <input
+                    type="text"
+                    id="customFilename"
+                    class="txt-input"
+                    style="margin-left: auto; max-width: 220px"
+                    placeholder="Leave blank for media title"
+                  />
+                </div>
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_rate">Rate Limit</span>
+                  <input
+                    type="text"
+                    id="rateLimit"
+                    class="txt-input"
+                    style="margin-left: auto; max-width: 220px"
+                    placeholder="e.g. 2M, 500K"
+                  />
+                </div>
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_playlist">Playlist Items</span>
+                  <input
+                    type="text"
+                    id="playlistItems"
+                    class="txt-input"
+                    style="margin-left: auto; max-width: 220px"
+                    placeholder="e.g. 1-5, 1,3,5"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dl-footer" id="dlFooter">
+            <button class="btn-download" id="btnDownload" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 3v14m-6-6 6 6 6-6" />
+                <line x1="4" y1="21" x2="20" y2="21" />
+              </svg>
+              <span data-i18n="btn_download">Download</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ══ QUEUE ══════════════════════════════════════════════════ -->
+        <section class="view" id="view-queue">
+          <div class="view-header">
+            <h2 data-i18n="nav_queue">Queue</h2>
+            <button class="btn-text" id="btnClearDone" data-i18n="btn_clear_done">
+              Clear Completed
+            </button>
+          </div>
+          <div class="queue-list" id="queueList">
+            <div class="empty-state" id="emptyQueue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                <path d="M12 3v14m-6-6 6 6 6-6" />
+                <line x1="4" y1="21" x2="20" y2="21" />
+              </svg>
+              <p data-i18n="queue_empty">No downloads yet</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-settings">
+          <div class="view-header"><h2 data-i18n="nav_settings">Settings</h2></div>
+          <div class="settings-body">
+            <div class="sgroup">
+              <div class="sgroup-title" data-i18n="sgroup_downloads">Downloads</div>
+              <div class="sgroup-body">
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_output_folder">Output Folder</span>
+                  <div class="irow" style="margin-left: auto">
+                    <input
+                      type="text"
+                      id="settOutputDir"
+                      class="txt-input"
+                      style="max-width: 180px"
+                      placeholder="~/Downloads"
+                      readonly
+                    />
+                    <button class="btn-secondary" id="btnSettFolder" data-i18n="btn_browse">
+                      Browse
+                    </button>
+                  </div>
+                </div>
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_always_overwrite"
+                    >Always Overwrite</span
+                  >
+                  <label class="switch" style="margin-left: auto">
+                    <input type="checkbox" id="chkAlwaysOverwrite" /><span class="slider"></span>
+                  </label>
+                </div>
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_prefer_opus">Prefer Opus Audio</span>
+                  <label class="switch" style="margin-left: auto">
+                    <input type="checkbox" id="chkPreferOpus" /><span class="slider"></span>
+                  </label>
+                </div>
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_max_concurrent"
+                    >Parallel Downloads</span
+                  >
+                  <select
+                    id="settMaxConcurrent"
+                    class="sel"
+                    style="margin-left: auto; max-width: 100px"
+                  >
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="sgroup">
+              <div class="sgroup-title" data-i18n="sgroup_language">Language &amp; Theme</div>
+              <div class="sgroup-body">
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_language">Language</span>
+                  <select id="settLang" class="sel" style="margin-left: auto; max-width: 200px">
+                    <option value="en">English</option>
+                    <option value="de">Deutsch</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="it">Italiano</option>
+                    <option value="pt">Português</option>
+                    <option value="ru">Русский</option>
+                    <option value="zh">中文</option>
+                    <option value="ja">日本語</option>
+                    <option value="ko">한국어</option>
+                    <option value="ar">العربية</option>
+                    <option value="tr">Türkçe</option>
+                    <option value="pl">Polski</option>
+                    <option value="nl">Nederlands</option>
+                    <option value="sv">Svenska</option>
+                  </select>
+                </div>
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_theme">Theme</span>
+                  <select id="settTheme" class="sel" style="margin-left: auto; max-width: 200px">
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                    <option value="midnight">Midnight</option>
+                    <option value="ocean">Ocean</option>
+                    <option value="custom" data-i18n="theme_custom">Custom</option>
+                  </select>
+                </div>
+                <div class="field-row" id="customThemeRow" style="display: none">
+                  <span class="field-label" data-i18n="label_custom_colors">Custom Colors</span>
+                  <button
+                    class="btn-secondary"
+                    id="btnEditCustomTheme"
+                    style="margin-left: auto"
+                    data-i18n="btn_edit_colors"
+                  >
+                    Edit Colors…
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sgroup">
+              <div class="sgroup-title" data-i18n="sgroup_cookies">Cookies</div>
+              <div class="sgroup-body">
+                <div class="cookie-status-row">
+                  <div class="cookie-dot" id="cookieDot"></div>
+                  <div class="cookie-info-col">
+                    <div class="cookie-status-text" id="cookieStatusText">No cookie file</div>
+                    <div class="cookie-hint" data-i18n="cookie_hint">
+                      Required for age-restricted or private content. Stored locally.
+                    </div>
+                  </div>
+                  <button
+                    class="btn-danger btn-sm"
+                    id="btnDeleteCookie"
+                    style="display: none; margin-left: auto"
+                    data-i18n="btn_remove"
+                  >
+                    Remove
+                  </button>
+                </div>
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_manual_import"
+                    >Import cookies.txt</span
+                  >
+                  <button
+                    class="btn-secondary"
+                    id="btnImportCookie"
+                    style="margin-left: auto"
+                    data-i18n="btn_choose_file"
+                  >
+                    Choose cookies.txt…
+                  </button>
+                </div>
+                <div class="helper-note" data-i18n="cookie_manual_note">
+                  Export cookies from your browser using the
+                  <strong>Get cookies.txt LOCALLY</strong>
+                  extension, then import here.
+                </div>
+              </div>
+            </div>
+
+            <div class="sgroup">
+              <div class="sgroup-title" data-i18n="sgroup_tools">Tools</div>
+              <div class="sgroup-body">
+                <div class="field-row">
+                  <span class="field-label">yt-dlp</span>
+                  <span class="tool-badge" id="settYtdlpVer">—</span>
+                </div>
+                <div class="field-row">
+                  <span class="field-label">ffmpeg</span>
+                  <span class="tool-badge" id="settFfmpegVer">—</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sgroup">
+              <div class="sgroup-title" data-i18n="sgroup_logs">Logs</div>
+              <div class="sgroup-body">
+                <div class="field-row">
+                  <span class="field-label" data-i18n="label_log_file">Log File</span>
+                  <div class="irow" style="margin-left: auto; gap: 6px">
+                    <button class="btn-secondary" id="btnOpenLog" data-i18n="btn_open_log">
+                      Open in Editor
+                    </button>
+                    <button class="btn-secondary" id="btnViewLog" data-i18n="btn_view_log">
+                      View
+                    </button>
+                    <button class="btn-secondary" id="btnClearLog" data-i18n="btn_clear_log">
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sgroup">
+              <div class="sgroup-title" data-i18n="sgroup_about">About</div>
+              <div class="sgroup-body">
+                <div class="about-block">
+                  <div class="about-logo">
+                    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                      <rect width="32" height="32" rx="7" fill="#5b7cf6" />
+                      <path d="M10 8l14 8-14 8V8z" fill="white" />
+                    </svg>
+                    <span>JASD</span>
+                    <span class="about-ver" id="aboutVer"></span>
+                  </div>
+                  <div class="about-desc">Just A Simple Downloader</div>
+                  <div class="about-desc" style="margin-top: 6px">
+                    <a href="#" class="about-link" data-href="https://github.com/MaRcR11/jasd"
+                      >github.com/MaRcR11/jasd</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="dl-overlay" id="dlOverlay" style="display: none">
+      <div class="dl-ov-header">
+        <div class="dl-ov-title" id="dlOvTitle">Downloading…</div>
+        <button class="btn-icon-sm btn-icon-danger" id="btnCancelDl" title="Cancel">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8">
+            <line x1="1" y1="1" x2="11" y2="11" />
+            <line x1="11" y1="1" x2="1" y2="11" />
+          </svg>
+        </button>
+      </div>
+      <div class="prog-wrap"><div class="prog-bar" id="dlProgBar"></div></div>
+      <div class="dl-ov-stats">
+        <span id="dlOvPct">0%</span>
+        <span id="dlOvSpeed"></span>
+        <span id="dlOvEta"></span>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="overwriteModal" style="display: none">
+      <div class="modal-box ow-modal-box">
+        <div class="ow-icon">
+          <svg
+            viewBox="0 0 24 24"
+            width="40"
+            height="40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="12" cy="12" r="11" fill="var(--warn)" opacity="0.15" />
+            <circle cx="12" cy="12" r="11" stroke="var(--warn)" stroke-width="1.6" />
+            <rect x="11" y="7" width="2" height="6" rx="1" fill="var(--warn)" />
+            <circle cx="12" cy="16.5" r="1.2" fill="var(--warn)" />
+          </svg>
+        </div>
+        <div class="ow-title" data-i18n="overwrite_title">File already exists</div>
+        <div class="ow-msg" data-i18n="overwrite_msg">
+          A file with a similar name already exists in the output folder.
+        </div>
+        <code class="ow-filename" id="overwriteFilename"></code>
+        <div class="ow-actions">
+          <button class="btn-secondary" id="btnOwCancel" data-i18n="overwrite_cancel">
+            Cancel
+          </button>
+          <button class="btn-secondary" id="btnOwSkip" data-i18n="overwrite_skip">Skip</button>
+          <button class="btn-ow-replace" id="btnOwReplace" data-i18n="overwrite_replace">
+            Overwrite
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="logModal" style="display: none">
+      <div class="modal-box log-modal-box">
+        <div class="log-modal-header">
+          <span data-i18n="sgroup_logs">Logs</span>
+          <button class="btn-icon-sm" id="btnCloseLog">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8">
+              <line x1="1" y1="1" x2="11" y2="11" />
+              <line x1="11" y1="1" x2="1" y2="11" />
+            </svg>
+          </button>
+        </div>
+        <pre class="log-content" id="logContent"></pre>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="customThemeModal" style="display: none">
+      <div class="modal-box" style="max-width: 420px; padding: 24px 24px 20px">
+        <div
+          style="font-weight: 600; font-size: 1rem; margin-bottom: 16px"
+          data-i18n="modal_custom_theme_title"
+        ></div>
+        <div class="custom-theme-grid" id="customThemeGrid"></div>
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px">
+          <button class="btn-secondary" id="btnCustomThemeReset" data-i18n="btn_reset">
+            Reset to Dark
+          </button>
+          <button class="btn-secondary" id="btnCustomThemeCancel" data-i18n="btn_cancel">
+            Cancel
+          </button>
+          <button
+            class="btn-download"
+            id="btnCustomThemeSave"
+            style="padding: 8px 18px; font-size: 0.875rem"
+            data-i18n="btn_save"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
