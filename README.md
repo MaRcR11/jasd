@@ -1,4 +1,4 @@
-# JASD — Just A Simple Downloader
+# JASD
 
 JASD is just a simple downloader, a fast and clean desktop app for downloading videos from YouTube and hundreds of other sites.
 
