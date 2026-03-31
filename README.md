@@ -1,10 +1,3 @@
-<p align="center">
-  <svg width="80" height="80" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="32" height="32" rx="7" fill="#5b7cf6" />
-    <path d="M10 8l14 8-14 8V8z" fill="white" />
-  </svg>
-</p>
-
 # JASD — Just A Simple Downloader
 
 A fast, clean desktop app for downloading videos from YouTube and hundreds of other sites.
