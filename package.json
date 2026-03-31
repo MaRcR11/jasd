@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "JASD — Just A Simple Downloader",
   "main": "main/index.js",
-  "author": "JASD",
+  "author": "MaRcR11",
   "license": "MIT",
   "scripts": {
     "start": "electron .",
