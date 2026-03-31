@@ -82,7 +82,8 @@
         }
       ],
       "icon": "assets/",
-      "category": "Video"
+      "category": "Video",
+      "maintainer": "MaRcR11"
     }
   }
 }

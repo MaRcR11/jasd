@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm run format:check
 
   build:
@@ -40,11 +40,11 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - name: Build
         run: npm run ${{ matrix.script }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ELECTRON_BUILDER_PUBLISH: never
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
