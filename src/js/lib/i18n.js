@@ -13,10 +13,56 @@ import tr from './locales/tr.js';
 import pl from './locales/pl.js';
 import nl from './locales/nl.js';
 import sv from './locales/sv.js';
+import cs from './locales/cs.js';
+import da from './locales/da.js';
+import el from './locales/el.js';
+import fi from './locales/fi.js';
+import hr from './locales/hr.js';
+import hu from './locales/hu.js';
+import id from './locales/id.js';
+import nb from './locales/nb.js';
+import ro from './locales/ro.js';
+import sk from './locales/sk.js';
+import th from './locales/th.js';
+import uk from './locales/uk.js';
+import vi from './locales/vi.js';
+import ptBR from './locales/pt-BR.js';
+import zhTW from './locales/zh-TW.js';
 
-import { S } from './state.js';
+import { S } from '../state.js';
 
-export const I18N = { en, de, fr, es, it, pt, ru, zh, ja, ko, ar, tr, pl, nl, sv };
+export const I18N = {
+  en,
+  de,
+  fr,
+  es,
+  it,
+  pt,
+  ru,
+  zh,
+  ja,
+  ko,
+  ar,
+  tr,
+  pl,
+  nl,
+  sv,
+  cs,
+  da,
+  el,
+  fi,
+  hr,
+  hu,
+  id,
+  nb,
+  ro,
+  sk,
+  th,
+  uk,
+  vi,
+  'pt-BR': ptBR,
+  'zh-TW': zhTW,
+};
 
 export function t(key) {
   return (I18N[S.lang] || I18N.en)[key] || key;
@@ -41,6 +87,10 @@ export function applyLang() {
 }
 
 export function detectSystemLang() {
-  const sys = (navigator.language || navigator.userLanguage || 'en').slice(0, 2).toLowerCase();
-  return I18N[sys] ? sys : 'en';
+  const raw = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+  const full = raw.replace('_', '-');
+  const normalized = Object.keys(I18N).find((k) => k.toLowerCase() === full);
+  if (normalized) return normalized;
+  const short = raw.slice(0, 2);
+  return I18N[short] ? short : 'en';
 }

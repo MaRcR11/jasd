@@ -1,8 +1,8 @@
-﻿import { S } from './state.js';
-import { formatBytes } from './formatters.js';
-import { showToast } from './ui.js';
-import { applyTheme, THEMES } from './themes.js';
-import { t } from './i18n.js';
+﻿import { S } from '../state.js';
+import { formatBytes } from '../lib/formatters.js';
+import { showToast } from '../components/ui.js';
+import { applyTheme, THEMES } from '../lib/themes.js';
+import { t } from '../lib/i18n.js';
 
 export function applySettings() {
   const downloadsDir = S._downloadsDir || '';
@@ -236,7 +236,7 @@ export function setupSettingsListeners() {
   document.getElementById('settLang').addEventListener('change', async (e) => {
     S.lang = e.target.value;
     await saveSetting('lang', S.lang);
-    const { applyLang } = await import('./i18n.js');
+    const { applyLang } = await import('../lib/i18n.js');
     applyLang();
   });
 
@@ -341,9 +341,9 @@ export function setupSettingsListeners() {
     S.settings = { ...S.settings, ...DEFAULTS };
     await window.api.saveSettings(DEFAULTS);
     applySettings();
-    const { applyTheme } = await import('./themes.js');
+    const { applyTheme } = await import('../lib/themes.js');
     applyTheme('dark');
-    const { applyLang, detectSystemLang } = await import('./i18n.js');
+    const { applyLang, detectSystemLang } = await import('../lib/i18n.js');
     S.lang = detectSystemLang();
     applyLang();
     showToast('Settings restored to defaults.', 'info');

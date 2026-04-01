@@ -1,5 +1,5 @@
 'use strict';
-const { ipcMain } = require('electron');
+const { ipcMain, dialog, shell } = require('electron');
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -87,7 +87,6 @@ function register(mainWindow, cookiePath) {
   });
 
   ipcMain.handle('pick-folder', async () => {
-    const { dialog } = require('electron');
     const r = await dialog.showOpenDialog(mainWindow, { properties: ['openDirectory'] });
     return r.canceled ? null : r.filePaths[0];
   });
@@ -265,7 +264,6 @@ function register(mainWindow, cookiePath) {
   });
 
   ipcMain.on('open-folder', (_e, folderPath) => {
-    const { shell } = require('electron');
     shell.openPath(folderPath);
   });
 
@@ -279,7 +277,6 @@ function register(mainWindow, cookiePath) {
         return 'File has changed since download — it may have been replaced.';
       }
     }
-    const { shell } = require('electron');
     return shell.openPath(filePath);
   });
 }

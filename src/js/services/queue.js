@@ -1,6 +1,18 @@
-﻿import { S } from './state.js';
-import { escHtml, formatTs } from './formatters.js';
-import { syncOverlayToView, refreshOverlay } from './ui.js';
+﻿import { S } from '../state.js';
+import { escHtml, formatTs } from '../lib/formatters.js';
+import { syncOverlayToView, refreshOverlay } from '../components/ui.js';
+
+const STATUS_MAP = {
+  queued: { label: 'Queued', cls: 'queued', color: 'var(--text3)' },
+  downloading: {
+    label: 'Downloading',
+    cls: 'downloading',
+    color: 'linear-gradient(90deg,var(--accent),#7c5cf6)',
+  },
+  done: { label: 'Done', cls: 'done', color: 'var(--success)' },
+  error: { label: 'Error', cls: 'error', color: 'var(--danger)' },
+  cancelled: { label: 'Cancelled', cls: 'cancelled', color: 'var(--text3)' },
+};
 
 export function updateBadge() {
   const n = S.queue.filter((q) => q.status === 'downloading' || q.status === 'queued').length;
@@ -31,6 +43,7 @@ export function processNextInQueue() {
 
     window.api.startDownload(next.opts).then((result) => {
       if (result?.error && !S.cancelledIds.has(next.id)) {
+        console.warn(`[queue] startDownload returned error for ${next.id}:`, result.error);
       }
     });
   }
@@ -208,18 +221,6 @@ export function updateQueueEl(el, item) {
   const retryBtn = el.querySelector('.qi-retry');
   const playBtn = el.querySelector('.qi-play');
 
-  const STATUS_MAP = {
-    queued: { label: 'Queued', cls: 'queued', color: 'var(--text3)' },
-    downloading: {
-      label: 'Downloading',
-      cls: 'downloading',
-      color: 'linear-gradient(90deg,var(--accent),#7c5cf6)',
-    },
-    done: { label: 'Done', cls: 'done', color: 'var(--success)' },
-    error: { label: 'Error', cls: 'error', color: 'var(--danger)' },
-    cancelled: { label: 'Cancelled', cls: 'cancelled', color: 'var(--text3)' },
-  };
-
   const s = STATUS_MAP[item.status] || STATUS_MAP.queued;
   p.style.width = `${item.percent || 0}%`;
   p.style.background = s.color;
@@ -268,7 +269,7 @@ export function updateQueueEl(el, item) {
               stat.textContent = item.completedAt ? formatTs(item.completedAt) : '';
             }, 4000);
           }
-          window.api.onLog && console.warn(`[play] openFile failed: ${err}`);
+          console.warn(`[play] openFile failed: ${err}`);
         }
       };
     } else {
