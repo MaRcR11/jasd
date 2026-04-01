@@ -9,7 +9,6 @@ https://github.com/user-attachments/assets/aa903f00-491f-451b-8199-26cfe6186783
 - **Video + Audio** or **audio only** download
 - **Download queue**
 - **30 languages** with auto-detection
-- **Auto-updates** — checks for new releases on startup and installs silently
 
 ---
 
