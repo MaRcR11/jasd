@@ -3,7 +3,6 @@
 <p align="center">JASD is just a simple downloader for videos and audio from YouTube and hundreds of other sites.</p>
 
 https://github.com/user-attachments/assets/ee5b6517-b436-40d7-adb2-4cb2bc11f0ee
-res
 
 - **Video + Audio** or **audio only** download
 - **Download queue** management
