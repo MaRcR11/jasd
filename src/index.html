@@ -356,8 +356,11 @@
                     <option value="es">Español</option>
                     <option value="it">Italiano</option>
                     <option value="pt">Português</option>
+                    <option value="pt-BR">Português (Brasil)</option>
                     <option value="ru">Русский</option>
-                    <option value="zh">中文</option>
+                    <option value="uk">Українська</option>
+                    <option value="zh">中文 (简体)</option>
+                    <option value="zh-TW">中文 (繁體)</option>
                     <option value="ja">日本語</option>
                     <option value="ko">한국어</option>
                     <option value="ar">العربية</option>
@@ -365,6 +368,18 @@
                     <option value="pl">Polski</option>
                     <option value="nl">Nederlands</option>
                     <option value="sv">Svenska</option>
+                    <option value="da">Dansk</option>
+                    <option value="nb">Norsk</option>
+                    <option value="fi">Suomi</option>
+                    <option value="cs">Čeština</option>
+                    <option value="sk">Slovenčina</option>
+                    <option value="hu">Magyar</option>
+                    <option value="ro">Română</option>
+                    <option value="hr">Hrvatski</option>
+                    <option value="el">Ελληνικά</option>
+                    <option value="id">Bahasa Indonesia</option>
+                    <option value="vi">Tiếng Việt</option>
+                    <option value="th">ภาษาไทย</option>
                   </select>
                 </div>
                 <div class="field-row">
@@ -450,7 +465,9 @@
               <div class="sgroup-title" data-i18n="sgroup_updates">Updates</div>
               <div class="sgroup-body">
                 <div class="field-row">
-                  <span class="field-label" data-i18n="label_check_updates_startup">Check for updates on startup</span>
+                  <span class="field-label" data-i18n="label_check_updates_startup"
+                    >Check for updates on startup</span
+                  >
                   <label class="switch" style="margin-left: auto">
                     <input type="checkbox" id="chkCheckUpdates" checked /><span
                       class="slider"
@@ -460,7 +477,12 @@
                 <div class="field-row">
                   <div id="updateStatusText" class="update-status-text"></div>
                   <div class="irow" style="margin-left: auto; gap: 6px">
-                    <button class="btn-secondary" id="btnCancelUpdate" data-i18n="btn_cancel" style="display: none">
+                    <button
+                      class="btn-secondary"
+                      id="btnCancelUpdate"
+                      data-i18n="btn_cancel"
+                      style="display: none"
+                    >
                       Cancel
                     </button>
                     <button
@@ -468,7 +490,9 @@
                       id="btnInstallUpdate"
                       style="display: none"
                     ></button>
-                    <button class="btn-secondary" id="btnCheckUpdate" data-i18n="btn_check_now">Check Now</button>
+                    <button class="btn-secondary" id="btnCheckUpdate" data-i18n="btn_check_now">
+                      Check Now
+                    </button>
                   </div>
                 </div>
                 <div class="update-dl-progress" id="updateDlProgress" style="display: none">

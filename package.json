@@ -2,7 +2,7 @@
   "name": "jasd",
   "version": "0.1.0",
   "description": "JASD — Just A Simple Downloader",
-  "main": "main/index.js",
+  "main": "src/browser/index.js",
   "author": "MaRcR11",
   "license": "MIT",
   "scripts": {
@@ -12,8 +12,8 @@
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux",
-    "format": "prettier --write \"main/**/*.js\" \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\"",
-    "format:check": "prettier --check \"main/**/*.js\" \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\""
+    "format": "prettier --write \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\""
   },
   "devDependencies": {
     "electron": "^29.0.0",
@@ -29,7 +29,6 @@
       "output": "dist"
     },
     "files": [
-      "main/**/*",
       "src/**/*",
       "assets/**/*"
     ],

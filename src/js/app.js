@@ -1,16 +1,16 @@
 ﻿import { S } from './state.js';
-import { t, applyLang, detectSystemLang } from './i18n.js';
-import { applyTheme } from './themes.js';
-import { setView } from './ui.js';
-import { renderQueue, updateBadge, updateEmptyState, patchQueue } from './queue.js';
+import { applyLang, detectSystemLang } from './lib/i18n.js';
+import { applyTheme } from './lib/themes.js';
+import { setView } from './components/ui.js';
+import { renderQueue, updateBadge, updateEmptyState, patchQueue } from './services/queue.js';
 import {
   fetchInfo,
   startDownload,
   handleCancelActive,
   setMode,
   wireDownloadEvents,
-} from './download.js';
-import { applySettings, checkTools, setupSettingsListeners } from './settings.js';
+} from './services/download.js';
+import { applySettings, checkTools, setupSettingsListeners } from './services/settings.js';
 
 (async () => {
   [S.settings, S.queue] = await Promise.all([
@@ -56,9 +56,7 @@ import { applySettings, checkTools, setupSettingsListeners } from './settings.js
   setupSettingsListeners();
 
   if (S.settings.checkForUpdates !== false) {
-    setTimeout(() => {
-      import('./settings.js').then((m) => m.checkForUpdate(true));
-    }, 4000);
+    setTimeout(() => checkForUpdate(true), 4000);
   }
 
   const verEl = document.getElementById('appVerText');
