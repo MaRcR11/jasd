@@ -143,12 +143,14 @@ export async function checkForUpdate(showIfNone = false) {
     S._updateLatest = result.latest;
     if (badge) badge.style.display = '';
     if (installBtn) {
-      installBtn.style.minWidth = '';
-      installBtn.textContent = result.downloadUrl
-        ? `\u2193 Install v${result.latest}`
-        : 'Open GitHub';
-      installBtn.style.display = '';
-      requestAnimationFrame(() => _lockBtnWidth(installBtn));
+      if (result.downloadUrl) {
+        installBtn.style.minWidth = '';
+        installBtn.textContent = `\u2193 Install v${result.latest}`;
+        installBtn.style.display = '';
+        requestAnimationFrame(() => _lockBtnWidth(installBtn));
+      } else {
+        installBtn.style.display = 'none';
+      }
     }
   } else {
     if (showIfNone) {
@@ -168,10 +170,7 @@ export async function installUpdate() {
   const statusEl = document.getElementById('updateStatusText');
   if (!btn || btn.disabled) return;
 
-  if (!S._updateDownloadUrl) {
-    if (S._updateUrl) window.api.openExternal(S._updateUrl);
-    return;
-  }
+  if (!S._updateDownloadUrl) return;
 
   _lockBtnWidth(btn);
   btn.disabled = true;
