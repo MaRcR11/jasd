@@ -5,7 +5,7 @@ const path = require('path');
 function _bundledBinDir() {
   try {
     const { app } = require('electron');
-    const base = app.isPackaged ? process.resourcesPath : path.join(__dirname, '..', '..');
+    const base = app.isPackaged ? process.resourcesPath : path.join(__dirname, '..', '..', '..');
     return path.join(base, 'bin');
   } catch {
     return null;

@@ -1,4 +1,4 @@
-﻿import { S } from './state.js';
+﻿import { S } from '../state.js';
 export const THEMES = {
   dark: {
     bg: '#0f0f11',

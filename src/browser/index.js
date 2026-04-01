@@ -1,7 +1,6 @@
 ﻿'use strict';
 const { app, BrowserWindow, ipcMain, Menu, screen, shell } = require('electron');
 const path = require('path');
-const os = require('os');
 
 const userDataPath = app.getPath('userData');
 const settingsPath = path.join(userDataPath, 'settings.json');
@@ -20,6 +19,17 @@ const downloadIpc = require('./ipc/download');
 Menu.setApplicationMenu(null);
 
 const { readJSON, writeJSON } = require('./utils/storage');
+
+function getTitlebarOverlay(theme) {
+  const isLight = theme === 'light';
+  const isMidnight = theme === 'midnight';
+  const isOcean = theme === 'ocean';
+  return {
+    color: isLight ? '#ffffff' : isMidnight ? '#0a0a0a' : isOcean ? '#0f2040' : '#17171b',
+    symbolColor: isLight ? '#5a5a7a' : '#9494a8',
+    height: 32,
+  };
+}
 
 let mainWindow;
 
@@ -47,29 +57,18 @@ function createWindow() {
     minHeight: 540,
     frame: false,
     titleBarStyle: 'hidden',
-    titleBarOverlay: {
-      color:
-        saved.theme === 'light'
-          ? '#ffffff'
-          : saved.theme === 'midnight'
-            ? '#0a0a0a'
-            : saved.theme === 'ocean'
-              ? '#0f2040'
-              : '#17171b',
-      symbolColor: saved.theme === 'light' ? '#5a5a7a' : '#9494a8',
-      height: 32,
-    },
+    titleBarOverlay: getTitlebarOverlay(saved.theme),
     backgroundColor: saved.theme === 'light' ? '#f0f0f5' : '#0f0f11',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
     },
-    icon: path.join(__dirname, '../assets/icon.png'),
+    icon: path.join(__dirname, '../../assets/icon.png'),
     show: true,
   });
 
-  mainWindow.loadFile(path.join(__dirname, '../src/index.html'));
+  mainWindow.loadFile(path.join(__dirname, '../index.html'));
 
   mainWindow.on('maximize', () => mainWindow.webContents.send('window-state', 'max'));
   mainWindow.on('unmaximize', () => mainWindow.webContents.send('window-state', 'win'));
@@ -124,14 +123,7 @@ app.whenReady().then(() => {
 
   ipcMain.on('update-titlebar-overlay', (_e, theme) => {
     if (!mainWindow) return;
-    const isLight = theme === 'light';
-    const isMidnight = theme === 'midnight';
-    const isOcean = theme === 'ocean';
-    mainWindow.setTitleBarOverlay({
-      color: isLight ? '#ffffff' : isMidnight ? '#0a0a0a' : isOcean ? '#0f2040' : '#17171b',
-      symbolColor: isLight ? '#5a5a7a' : '#9494a8',
-      height: 32,
-    });
+    mainWindow.setTitleBarOverlay(getTitlebarOverlay(theme));
   });
 
   app.on('activate', () => {
