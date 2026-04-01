@@ -1,0 +1,15 @@
+<svg viewBox="0 0 106 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5b7cf6"/>
+      <stop offset="100%" stop-color="#7c5cf6"/>
+    </linearGradient>
+    <style>
+      .t { fill: #1f2328 }
+      @media (prefers-color-scheme: dark) { .t { fill: #e6edf3 } }
+    </style>
+  </defs>
+  <rect width="28" height="28" rx="6.125" fill="url(#g)"/>
+  <path d="M8.75 7l12.25 7-12.25 7V7z" fill="white"/>
+  <text x="38" y="21" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-weight="700" font-size="17" class="t">JASD</text>
+</svg>
