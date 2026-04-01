@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Λήψη',
   nav_queue: 'Ουρά',
   nav_settings: 'Ρυθμίσεις',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Η λήψη απέτυχε',
   btn_install_update: '↓ Εγκατάσταση',
   btn_view_update: 'Προβολή',
+  btn_restore_defaults: 'Επαναφορά προεπιλογών',
+  toast_settings_restored: 'Οι ρυθμίσεις επαναφέρθηκαν στις προεπιλογές.',
 };

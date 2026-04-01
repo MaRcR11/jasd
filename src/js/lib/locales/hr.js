@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Preuzimanje',
   nav_queue: 'Red čekanja',
   nav_settings: 'Postavke',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Preuzimanje neuspješno',
   btn_install_update: '↓ Instaliraj',
   btn_view_update: 'Prikaži',
+  btn_restore_defaults: 'Vrati zadane vrijednosti',
+  toast_settings_restored: 'Postavke vraćene na zadane vrijednosti.',
 };

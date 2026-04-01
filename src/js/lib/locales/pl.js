@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Pobierz',
   nav_queue: 'Kolejka',
   nav_settings: 'Ustawienia',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Pobieranie nie powiodło się',
   btn_install_update: '↓ Zainstaluj',
   btn_view_update: 'Wyświetl',
+  btn_restore_defaults: 'Przywróć ustawienia domyślne',
+  toast_settings_restored: 'Ustawienia przywrócone do domyślnych.',
 };

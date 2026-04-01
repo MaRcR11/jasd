@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Ladda ner',
   nav_queue: 'Kö',
   nav_settings: 'Inställningar',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Nedladdning misslyckades',
   btn_install_update: '↓ Installera',
   btn_view_update: 'Visa',
+  btn_restore_defaults: 'Återställ standardvärden',
+  toast_settings_restored: 'Inställningar återställda till standardvärden.',
 };

@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'ดาวน์โหลด',
   nav_queue: 'คิว',
   nav_settings: 'การตั้งค่า',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'การดาวน์โหลดล้มเหลว',
   btn_install_update: '↓ ติดตั้ง',
   btn_view_update: 'ดู',
+  btn_restore_defaults: 'คืนค่าเริ่มต้น',
+  toast_settings_restored: 'คืนค่าการตั้งค่าเป็นค่าเริ่มต้นแล้ว',
 };

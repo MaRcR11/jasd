@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Завантажити',
   nav_queue: 'Черга',
   nav_settings: 'Налаштування',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Завантаження не вдалося',
   btn_install_update: '↓ Встановити',
   btn_view_update: 'Переглянути',
+  btn_restore_defaults: 'Відновити типові',
+  toast_settings_restored: 'Налаштування відновлено до типових.',
 };

@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Unduh',
   nav_queue: 'Antrian',
   nav_settings: 'Pengaturan',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Unduhan gagal',
   btn_install_update: '↓ Instal',
   btn_view_update: 'Lihat',
+  btn_restore_defaults: 'Pulihkan Default',
+  toast_settings_restored: 'Pengaturan dikembalikan ke default.',
 };

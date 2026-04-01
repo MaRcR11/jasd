@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: '下載',
   nav_queue: '佇列',
   nav_settings: '設定',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: '下載失敗',
   btn_install_update: '↓ 安裝',
   btn_view_update: '檢視',
+  btn_restore_defaults: '還原預設值',
+  toast_settings_restored: '設定已還原為預設值。',
 };

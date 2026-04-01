@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'ダウンロード',
   nav_queue: 'キュー',
   nav_settings: '設定',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'ダウンロード失敗',
   btn_install_update: '↓ インストール',
   btn_view_update: '表示',
+  btn_restore_defaults: 'デフォルトに戻す',
+  toast_settings_restored: '設定をデフォルトに戻しました。',
 };
