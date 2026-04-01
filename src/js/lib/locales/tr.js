@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'İndir',
   nav_queue: 'Sıra',
   nav_settings: 'Ayarlar',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'İndirme başarısız',
   btn_install_update: '↓ Yükle',
   btn_view_update: 'Görüntüle',
+  btn_restore_defaults: 'Varsayılanları Geri Yükle',
+  toast_settings_restored: 'Ayarlar varsayılanlara geri yüklendi.',
 };

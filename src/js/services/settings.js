@@ -346,7 +346,7 @@ export function setupSettingsListeners() {
     const { applyLang, detectSystemLang } = await import('../lib/i18n.js');
     S.lang = detectSystemLang();
     applyLang();
-    showToast('Settings restored to defaults.', 'info');
+    showToast(t('toast_settings_restored'), 'info');
   };
 }
 

@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: '다운로드',
   nav_queue: '대기열',
   nav_settings: '설정',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: '다운로드 실패',
   btn_install_update: '↓ 설치',
   btn_view_update: '보기',
+  btn_restore_defaults: '기본값으로 복원',
+  toast_settings_restored: '설정이 기본값으로 복원되었습니다.',
 };

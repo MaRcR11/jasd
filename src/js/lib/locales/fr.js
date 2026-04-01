@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Télécharger',
   nav_queue: "File d'attente",
   nav_settings: 'Paramètres',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Téléchargement échoué',
   btn_install_update: '↓ Installer',
   btn_view_update: 'Voir',
+  btn_restore_defaults: 'Restaurer les valeurs par défaut',
+  toast_settings_restored: 'Paramètres restaurés aux valeurs par défaut.',
 };

@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Last ned',
   nav_queue: 'Kø',
   nav_settings: 'Innstillinger',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Nedlasting mislyktes',
   btn_install_update: '↓ Installer',
   btn_view_update: 'Vis',
+  btn_restore_defaults: 'Gjenopprett standarder',
+  toast_settings_restored: 'Innstillinger gjenopprettet til standard.',
 };

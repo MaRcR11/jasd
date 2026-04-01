@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Tải xuống',
   nav_queue: 'Hàng đợi',
   nav_settings: 'Cài đặt',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Tải xuống thất bại',
   btn_install_update: '↓ Cài đặt',
   btn_view_update: 'Xem',
+  btn_restore_defaults: 'Khôi phục mặc định',
+  toast_settings_restored: 'Cài đặt đã được khôi phục về mặc định.',
 };
