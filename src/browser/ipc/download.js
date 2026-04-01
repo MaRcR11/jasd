@@ -34,7 +34,7 @@ function register(mainWindow, cookiePath) {
     writeLog(`Fetching info: ${url}`);
 
     return new Promise((resolve) => {
-      const args = ['--dump-json', '--no-playlist'];
+      const args = ['--dump-single-json', '--flat-playlist'];
       if (fs.existsSync(cookiePath)) args.push('--cookies', cookiePath);
       args.push(url);
 
@@ -46,12 +46,46 @@ function register(mainWindow, cookiePath) {
       proc.on('close', (code) => {
         if (code !== 0) {
           writeLog(`fetch-info error (code ${code}): ${stderr.slice(0, 500)}`);
-          const short = 'Failed to fetch media info — check the log for details.';
-          resolve({ error: short });
+          resolve({ error: 'Failed to fetch media info — check the log for details.' });
           return;
         }
         try {
           const info = JSON.parse(stdout);
+
+          // ── Playlist ──────────────────────────────────────────────
+          if (info._type === 'playlist') {
+            const UNAVAILABLE = /^\[(Private|Deleted) video\]$/i;
+            const rawEntries = info.entries || [];
+            const entries = rawEntries
+              .filter((e) => {
+                if (!e) return false;
+                if (UNAVAILABLE.test(e.title || '')) return false;
+                if (e.availability && e.availability !== 'public') return false;
+                return true;
+              })
+              .map((e, i) => ({
+                index: i + 1,
+                title: e.title || e.id || `Video ${i + 1}`,
+                duration: e.duration || null,
+                thumbnail: e.thumbnail || e.thumbnails?.[e.thumbnails.length - 1]?.url || null,
+                url: e.url || e.webpage_url || null,
+              }));
+            const thumbnail =
+              info.thumbnails?.[info.thumbnails.length - 1]?.url || entries[0]?.thumbnail || null;
+            resolve({
+              isPlaylist: true,
+              title: info.title || info.id || 'Playlist',
+              thumbnail,
+              uploader: info.uploader || info.channel || info.uploader_id || null,
+              entryCount: entries.length,
+              entries,
+              webpage_url: info.webpage_url || url,
+              formats: [],
+            });
+            return;
+          }
+
+          // ── Single video ──────────────────────────────────────────
           const formats = (info.formats || [])
             .filter((f) => f.ext && (f.vcodec !== 'none' || f.acodec !== 'none'))
             .map((f) => ({
@@ -99,6 +133,7 @@ function register(mainWindow, cookiePath) {
       url,
       outputDir,
       formatId,
+      formatHeight,
       audioOnly,
       audioFormat,
       audioQuality,
@@ -146,25 +181,50 @@ function register(mainWindow, cookiePath) {
         String(audioQuality ?? 0)
       );
     } else {
-      let fmtStr;
       const aud = buildAudioFormatPart(videoAudioQuality, !!preferOpus);
-      if (formatId && formatId !== 'bestvideo+bestaudio/best') {
-        fmtStr = `${formatId}+${aud.m4a}/${formatId}+${aud.any}/${formatId}/best`;
+      const isWebm = container === 'webm';
+      const needsH264 = container === 'mp4' || container === 'mov';
+      const isMkv = container === 'mkv';
+
+      let fmtStr;
+      if (isWebm) {
+        // VP9/VP8 video + WebM (Opus) audio — don't use m4a audio in WebM
+        fmtStr =
+          'bestvideo[vcodec^=vp]+bestaudio[ext=webm]/bestvideo[vcodec^=vp]+bestaudio/bestvideo+bestaudio';
+      } else if (needsH264) {
+        // MP4/MOV: prefer H.264 (avc1) — VP9 cannot be stream-copied into these containers
+        const h = formatHeight ? `[height<=${formatHeight}]` : '';
+        if (formatId && formatId !== 'bestvideo+bestaudio/best') {
+          fmtStr = `bestvideo[vcodec^=avc1]${h}+${aud.m4a}/bestvideo[vcodec^=avc1]${h}+${aud.any}/${formatId}+${aud.m4a}/${formatId}+${aud.any}/${formatId}/best`;
+        } else {
+          fmtStr = `bestvideo[vcodec^=avc1]+${aud.m4a}/bestvideo[vcodec^=avc1]+${aud.any}/bestvideo[ext=mp4]+${aud.m4a}/bestvideo[ext=mp4]+${aud.any}/bestvideo+${aud.m4a}/bestvideo+${aud.any}/bestvideo+bestaudio/best`;
+        }
       } else {
-        fmtStr = `bestvideo+${aud.m4a}/bestvideo+${aud.any}/bestvideo+bestaudio/best`;
+        // MKV and others: any codec is fine
+        if (formatId && formatId !== 'bestvideo+bestaudio/best') {
+          fmtStr = `${formatId}+${aud.m4a}/${formatId}+${aud.any}/${formatId}/best`;
+        } else {
+          fmtStr = `bestvideo+${aud.m4a}/bestvideo+${aud.any}/bestvideo+bestaudio/best`;
+        }
       }
+
       args.push('-f', fmtStr);
       args.push('--merge-output-format', container || 'mp4');
-      // when Opus is preferred (or used as fallback), re-encode to AAC for Windows compatibility.
-      // -c:a aac is a no-op when the stream is already AAC (stream copy applies automatically).
-      // copy video, convert audio to aac — opus-in-mp4 not supported by windows media apps
-      args.push('--postprocessor-args', 'Merger+ffmpeg:-c:v copy -c:a aac -b:a 192k');
+
+      if (isWebm || isMkv) {
+        // Both containers support native codecs — stream copy everything
+        args.push('--postprocessor-args', 'Merger+ffmpeg:-c copy');
+      } else {
+        // MP4/MOV: stream copy H.264 video, ensure AAC audio (Opus not compatible with these containers)
+        args.push('--postprocessor-args', 'Merger+ffmpeg:-c:v copy -c:a aac -b:a 192k');
+      }
     }
 
     if (embedThumbnail) args.push('--embed-thumbnail');
     if (addMetadata) args.push('--add-metadata', '--embed-metadata');
     if (rateLimit) args.push('-r', rateLimit);
     if (playlistItems) args.push('--playlist-items', playlistItems);
+    args.push('--no-abort-on-error');
     if (fs.existsSync(cookiePath)) args.push('--cookies', cookiePath);
 
     args.push(url);

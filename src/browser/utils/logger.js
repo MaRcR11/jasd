@@ -6,12 +6,12 @@ function init(logPath) {
   _logPath = logPath;
 }
 
+// Use async append so the main-process event loop is never blocked by log I/O.
+// Fire-and-forget: errors are silently ignored to avoid cascading issues.
 function writeLog(msg) {
   if (!_logPath) return;
   const ts = new Date().toISOString();
-  try {
-    fs.appendFileSync(_logPath, `[${ts}] ${msg}\n`);
-  } catch {}
+  fs.appendFile(_logPath, `[${ts}] ${msg}\n`, () => {});
 }
 
 module.exports = { init, writeLog };

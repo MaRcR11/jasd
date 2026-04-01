@@ -1,9 +1,10 @@
 ﻿import { S } from '../state.js';
 import { t } from '../lib/i18n.js';
 import { formatDuration, formatCount, formatDate, escHtml } from '../lib/formatters.js';
-import { showToast, showOverwriteModal } from '../components/ui.js';
+import { showToast, showOverwriteModal, showPlaylistOverwriteModal } from '../components/ui.js';
 import {
   enqueueDownload,
+  enqueuePlaylistGroup,
   cancelActive,
   onProgress,
   onComplete,
@@ -16,6 +17,7 @@ export async function fetchInfo() {
   if (!url) return;
 
   document.getElementById('infoCard').style.display = 'none';
+  document.getElementById('playlistPanel').style.display = 'none';
   document.getElementById('optionsPanel').style.display = 'none';
   document.getElementById('loadingState').style.display = 'flex';
   document.getElementById('btnFetch').disabled = true;
@@ -32,9 +34,24 @@ export async function fetchInfo() {
   }
 
   S.videoInfo = info;
-  populateInfo(info);
-  populateFormats(info.formats || []);
-  document.getElementById('infoCard').style.display = '';
+
+  if (info.isPlaylist) {
+    populatePlaylist(info);
+    document.getElementById('playlistPanel').style.display = '';
+    document.getElementById('infoCard').style.display = 'none';
+    document.getElementById('playlistItemsRow').style.display = '';
+    document.getElementById('customFilenameRow').style.display = 'none';
+    document.getElementById('customFilename').value = '';
+  } else {
+    populateInfo(info);
+    populateFormats(info.formats || []);
+    document.getElementById('infoCard').style.display = '';
+    document.getElementById('playlistPanel').style.display = 'none';
+    document.getElementById('playlistItemsRow').style.display = 'none';
+    document.getElementById('playlistItems').value = '';
+    document.getElementById('customFilenameRow').style.display = '';
+  }
+
   document.getElementById('optionsPanel').style.display = '';
   document.getElementById('btnDownload').disabled = false;
 }
@@ -52,6 +69,33 @@ function populateInfo(info) {
   if (info.view_count) parts.push(escHtml(formatCount(info.view_count) + ' views'));
   if (info.upload_date) parts.push(escHtml(formatDate(info.upload_date)));
   subEl.innerHTML = parts.join('<span class="sep"> · </span>');
+}
+
+function populatePlaylist(info) {
+  document.getElementById('plThumb').src = info.thumbnail || '';
+  document.getElementById('plTitle').textContent = info.title || 'Playlist';
+
+  const parts = [];
+  if (info.entryCount) parts.push(`${info.entryCount} videos`);
+  if (info.uploader) parts.push(escHtml(info.uploader));
+  document.getElementById('plSub').textContent = parts.join(' · ');
+
+  const list = document.getElementById('plList');
+  list.innerHTML = '';
+  (info.entries || []).forEach((entry) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'pl-entry';
+    const dur = entry.duration ? formatDuration(entry.duration) : '';
+    wrap.innerHTML = `
+      <span class="pl-entry-num">${entry.index}</span>
+      <div class="pl-entry-thumb-wrap">
+        <img class="pl-entry-thumb" src="${escHtml(entry.thumbnail || '')}" alt="" />
+        ${dur ? `<span class="pl-entry-dur">${escHtml(dur)}</span>` : ''}
+      </div>
+      <span class="pl-entry-title">${escHtml(entry.title)}</span>
+    `;
+    list.appendChild(wrap);
+  });
 }
 
 function populateFormats(formats) {
@@ -88,6 +132,110 @@ export async function startDownload() {
   const audioFormat = document.getElementById('audioFmtSelect').value;
   const container = document.getElementById('containerSelect').value;
   const ext = audioOnly ? audioFormat : container;
+
+  // ── Playlist: one child download per entry ───────────────────────
+  if (S.videoInfo.isPlaylist) {
+    let entries = S.videoInfo.entries || [];
+    if (!entries.length) return;
+
+    const groupId = `dl_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+    const sharedOpts = {
+      outputDir,
+      formatId: audioOnly ? null : document.getElementById('fmtSelect').value,
+      audioOnly,
+      audioFormat,
+      audioQuality: document.getElementById('audioQualSelect').value,
+      videoAudioQuality: document.getElementById('videoAudioQualSelect')?.value || '0',
+      preferOpus: !!S.settings.preferOpus,
+      embedThumbnail: document.getElementById('chkThumb').checked,
+      addMetadata: document.getElementById('chkMeta').checked,
+      rateLimit: document.getElementById('rateLimit').value.trim() || null,
+      container,
+      forceOverwrite: !!S.settings.alwaysOverwrite,
+      customFilename: null,
+    };
+
+    // Apply playlist items filter (e.g. "1-3,5") before building child jobs
+    const playlistItemsVal = document.getElementById('playlistItems').value.trim();
+    if (playlistItemsVal) {
+      const allowed = new Set();
+      for (const part of playlistItemsVal.split(',')) {
+        const range = part.trim().split('-');
+        if (range.length === 2) {
+          const a = parseInt(range[0], 10);
+          const b = parseInt(range[1], 10);
+          if (!isNaN(a) && !isNaN(b)) for (let n = a; n <= b; n++) allowed.add(n);
+        } else {
+          const n = parseInt(range[0], 10);
+          if (!isNaN(n)) allowed.add(n);
+        }
+      }
+      entries = entries.filter((e) => allowed.has(e.index));
+    }
+    if (!entries.length) return;
+
+    // ── Overwrite check ──────────────────────────────────────────────
+    if (!S.settings.alwaysOverwrite && outputDir) {
+      const existChecks = await Promise.all(
+        entries.map((entry) =>
+          window.api
+            .checkOutputExists({ outputDir, title: entry.title, ext })
+            .then((p) => (p ? entry : null))
+        )
+      );
+      const conflicting = existChecks.filter(Boolean);
+      if (conflicting.length) {
+        const choice = await showPlaylistOverwriteModal(conflicting.length, entries.length);
+        if (choice === 'cancel') return;
+        if (choice === 'skip') {
+          const conflictSet = new Set(conflicting.map((e) => e.index));
+          entries = entries.filter((e) => !conflictSet.has(e.index));
+          if (!entries.length) return;
+        }
+        // 'overwrite' → keep all entries, forceOverwrite already false but flip it
+        if (choice === 'overwrite') sharedOpts.forceOverwrite = true;
+      }
+    }
+
+    const group = {
+      id: groupId,
+      title: S.videoInfo.title || 'Playlist',
+      thumb: S.videoInfo.thumbnail || '',
+      isPlaylistGroup: true,
+      status: 'queued',
+      percent: 0,
+      doneCount: 0,
+      totalCount: entries.length,
+      outputDir,
+    };
+
+    const children = entries.map((entry, i) => {
+      const childId = `${groupId}_${i}`;
+      return {
+        id: childId,
+        parentId: groupId,
+        title: entry.title || `Video ${entry.index}`,
+        thumb: entry.thumbnail || S.videoInfo.thumbnail || '',
+        fileType: ext,
+        status: 'queued',
+        percent: 0,
+        speed: '',
+        eta: '',
+        outputDir,
+        opts: {
+          ...sharedOpts,
+          url: entry.url,
+          downloadId: childId,
+          playlistItems: null,
+        },
+      };
+    });
+
+    enqueuePlaylistGroup(group, children);
+    return;
+  }
+
+  // ── Single video ─────────────────────────────────────────────────
   const title =
     document.getElementById('customFilename')?.value.trim() || S.videoInfo.title || 'download';
 
@@ -105,10 +253,23 @@ export async function startDownload() {
 
   const downloadId = `dl_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
 
+  const fmtSelectValue = audioOnly ? null : document.getElementById('fmtSelect').value;
+  const selectedFmt =
+    fmtSelectValue && fmtSelectValue !== 'bestvideo+bestaudio/best'
+      ? (S.videoInfo?.formats || []).find((f) => f.format_id === fmtSelectValue)
+      : null;
+  // Extract height from resolution string e.g. "1920x1080" or "1080p60"
+  const formatHeight = selectedFmt?.resolution
+    ? parseInt((selectedFmt.resolution.match(/\d+x(\d+)/) || [])[1]) ||
+      parseInt((selectedFmt.resolution.match(/^(\d+)p/) || [])[1]) ||
+      null
+    : null;
+
   const opts = {
     url: S.videoInfo.webpage_url || document.getElementById('urlInput').value.trim(),
     outputDir,
-    formatId: audioOnly ? null : document.getElementById('fmtSelect').value,
+    formatId: fmtSelectValue,
+    formatHeight,
     audioOnly,
     audioFormat,
     audioQuality: document.getElementById('audioQualSelect').value,
@@ -168,4 +329,54 @@ export function wireDownloadEvents() {
     showToast('Download failed — check Settings → Logs for details.', 'error');
   });
   window.api.onCancelled(onCancelled);
+
+  document.getElementById('playlistItems').addEventListener('input', (e) => {
+    const max = S.videoInfo?.entryCount;
+    if (!max || max < 1) return;
+    sanitizePlaylistItems(e.target, max);
+  });
+}
+
+function sanitizePlaylistItems(input, max) {
+  const orig = input.value;
+  const cursor = input.selectionStart;
+  const endsWithComma = orig.endsWith(',');
+
+  const parts = orig.replace(/[^\d\-,]/g, '').split(',');
+
+  const sanitized = parts.map((part) => {
+    if (!part) return '';
+    const dashIdx = part.indexOf('-');
+
+    if (dashIdx === -1) {
+      const n = parseInt(part, 10);
+      if (isNaN(n) || n < 1) return '';
+      return String(Math.min(n, max));
+    }
+
+    if (dashIdx === 0) return ''; // leading dash — not a range separator
+
+    const aStr = part.slice(0, dashIdx);
+    const bStr = part.slice(dashIdx + 1);
+    const a = parseInt(aStr, 10);
+    if (isNaN(a)) return '';
+    const aVal = Math.min(Math.max(a, 1), max);
+
+    if (!bStr) return `${aVal}-`; // partial range, e.g. "3-"
+
+    const b = parseInt(bStr, 10);
+    if (isNaN(b)) return `${aVal}-`;
+    const bVal = Math.min(Math.max(b, aVal), max);
+    return `${aVal}-${bVal}`;
+  });
+
+  let result = sanitized.filter((p) => p !== '').join(',');
+  if (endsWithComma) result += ',';
+
+  if (result !== orig) {
+    const diff = result.length - orig.length;
+    input.value = result;
+    const pos = Math.max(0, Math.min(cursor + diff, result.length));
+    input.setSelectionRange(pos, pos);
+  }
 }
