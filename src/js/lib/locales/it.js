@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Scarica',
   nav_queue: 'Coda',
   nav_settings: 'Impostazioni',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Download fallito',
   btn_install_update: '↓ Installa',
   btn_view_update: 'Vedi',
+  btn_restore_defaults: 'Ripristina predefiniti',
+  toast_settings_restored: 'Impostazioni ripristinate ai valori predefiniti.',
 };

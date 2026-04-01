@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Sťahovanie',
   nav_queue: 'Fronta',
   nav_settings: 'Nastavenia',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Sťahovanie zlyhalo',
   btn_install_update: '↓ Inštalovať',
   btn_view_update: 'Zobraziť',
+  btn_restore_defaults: 'Obnoviť predvolené hodnoty',
+  toast_settings_restored: 'Nastavenia obnovené na predvolené hodnoty.',
 };

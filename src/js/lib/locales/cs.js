@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Stáhnout',
   nav_queue: 'Fronta',
   nav_settings: 'Nastavení',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Stahování selhalo',
   btn_install_update: '↓ Instalovat',
   btn_view_update: 'Zobrazit',
+  btn_restore_defaults: 'Obnovit výchozí',
+  toast_settings_restored: 'Nastavení obnovena na výchozí hodnoty.',
 };

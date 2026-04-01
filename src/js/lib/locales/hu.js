@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Letöltés',
   nav_queue: 'Sor',
   nav_settings: 'Beállítások',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Letöltés sikertelen',
   btn_install_update: '↓ Telepítés',
   btn_view_update: 'Megtekintés',
+  btn_restore_defaults: 'Alapértelmezések visszaállítása',
+  toast_settings_restored: 'A beállítások visszaállítva az alapértelmezettekre.',
 };

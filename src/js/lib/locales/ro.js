@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Descărcare',
   nav_queue: 'Coadă',
   nav_settings: 'Setări',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Descărcare eșuată',
   btn_install_update: '↓ Instalare',
   btn_view_update: 'Vizualizare',
+  btn_restore_defaults: 'Restaurați implicit',
+  toast_settings_restored: 'Setările au fost restaurate la valorile implicite.',
 };

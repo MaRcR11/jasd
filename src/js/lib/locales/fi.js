@@ -1,4 +1,4 @@
-export default {
+﻿export default {
   nav_download: 'Lataa',
   nav_queue: 'Jono',
   nav_settings: 'Asetukset',
@@ -82,4 +82,6 @@ export default {
   update_dl_failed: 'Lataus epäonnistui',
   btn_install_update: '↓ Asenna',
   btn_view_update: 'Näytä',
+  btn_restore_defaults: 'Palauta oletukset',
+  toast_settings_restored: 'Asetukset palautettu oletuksiin.',
 };
