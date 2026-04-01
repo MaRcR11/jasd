@@ -211,11 +211,16 @@ function register(mainWindow, cookiePath) {
           const movedFiles = moveFromTmp(tmpDir, outDir, downloadId);
           const outputFile = movedFiles[0]?.path || null;
           const outputFileHash = movedFiles[0]?.hash || null;
+          let outputFileSize = null;
+          if (outputFile) {
+            try { outputFileSize = fs.statSync(outputFile).size; } catch {}
+          }
           mainWindow.webContents.send('download-complete', {
             downloadId,
             outputDir: outDir,
             outputFile,
             outputFileHash,
+            outputFileSize,
           });
           resolve({ success: true, outputDir: outDir, outputFile, outputFileHash });
         } else {

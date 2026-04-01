@@ -128,6 +128,7 @@ export async function startDownload() {
     id: downloadId,
     title: S.videoInfo.title || 'Downloading…',
     thumb: S.videoInfo.thumbnail || '',
+    fileType: ext,
     status: 'queued',
     percent: 0,
     speed: '',
