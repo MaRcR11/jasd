@@ -72,6 +72,24 @@ export function setView(name) {
   syncOverlayToView();
 }
 
+export function showPlaylistOverwriteModal(conflictCount, totalCount) {
+  return new Promise((resolve) => {
+    const overlay = document.getElementById('playlistOverwriteModal');
+    document.getElementById('plOwMsg').textContent =
+      `${conflictCount} of ${totalCount} files already exist in the output folder.`;
+    overlay.style.display = 'flex';
+
+    const cleanup = (choice) => {
+      overlay.style.display = 'none';
+      resolve(choice);
+    };
+
+    document.getElementById('btnPlOwCancel').onclick = () => cleanup('cancel');
+    document.getElementById('btnPlOwSkip').onclick = () => cleanup('skip');
+    document.getElementById('btnPlOwOverwrite').onclick = () => cleanup('overwrite');
+  });
+}
+
 export function showOverwriteModal(filename, i18nT) {
   return new Promise((resolve) => {
     const overlay = document.getElementById('overwriteModal');
