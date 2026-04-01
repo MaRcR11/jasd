@@ -210,10 +210,16 @@ function register(cookiePath, logPath) {
             file.on('finish', () => {
               file.close(() => {
                 writeLog(`Update installer saved to ${destPath}`);
-                shell
-                  .openPath(destPath)
-                  .then(() => done({ success: true }))
-                  .catch((e) => done({ error: e.message }));
+                try {
+                  const { spawn } = require('child_process');
+                  const child = spawn(destPath, ['/S'], { detached: true, stdio: 'ignore' });
+                  child.unref();
+                  writeLog('Silent installer launched, quitting for update');
+                  done({ success: true });
+                  setTimeout(() => app.quit(), 800);
+                } catch (e) {
+                  done({ error: e.message });
+                }
               });
             });
             const onStreamError = () => {

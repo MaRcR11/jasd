@@ -201,8 +201,8 @@ export async function installUpdate() {
     }
   } else {
     if (statusEl) {
-      statusEl.textContent = 'Installer launched \u2014 the app will close.';
-      statusEl.className = 'update-status-text up-to-date';
+      statusEl.textContent = 'Installing\u2026 app will restart shortly';
+      statusEl.className = 'update-status-text downloading';
     }
     if (btn) btn.style.display = 'none';
   }
