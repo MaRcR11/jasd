@@ -1,11 +1,10 @@
-﻿import { S } from './state.js';
-import { t } from './i18n.js';
-import { formatDuration, formatCount, formatDate, escHtml } from './formatters.js';
-import { showToast, showOverwriteModal, refreshOverlay, syncOverlayToView } from './ui.js';
+﻿import { S } from '../state.js';
+import { t } from '../lib/i18n.js';
+import { formatDuration, formatCount, formatDate, escHtml } from '../lib/formatters.js';
+import { showToast, showOverwriteModal } from '../components/ui.js';
 import {
   enqueueDownload,
   cancelActive,
-  cancelSpecific,
   onProgress,
   onComplete,
   onDlError,

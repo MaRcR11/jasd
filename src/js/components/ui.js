@@ -1,4 +1,4 @@
-﻿import { S } from './state.js';
+﻿import { S } from '../state.js';
 
 export function showToast(msg, type = 'info', openDir = null) {
   const prev = document.getElementById('_toast');

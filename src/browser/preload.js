@@ -25,7 +25,6 @@ contextBridge.exposeInMainWorld('api', {
   saveQueue: (d) => ipcRenderer.invoke('save-queue', d),
 
   pickCookieFile: () => ipcRenderer.invoke('pick-cookie-file'),
-  extractCookiesFromBrowser: (b) => ipcRenderer.invoke('extract-cookies-from-browser', b),
   deleteCookies: () => ipcRenderer.invoke('delete-cookies'),
 
   checkOutputExists: (p) => ipcRenderer.invoke('check-output-exists', p),
