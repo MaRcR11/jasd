@@ -1,6 +1,6 @@
 <p align="center"><img src="assets/logo-text.svg" height="42" alt="JASD"/></p>
 
-<p align="center">A fast, clean desktop app for downloading videos from YouTube and hundreds of other sites.</p>
+<p align="center">JASD is just a simple downloader, a fast and clean desktop app for downloading videos from YouTube and hundreds of other sites.</p>
 
 https://github.com/user-attachments/assets/ee5b6517-b436-40d7-adb2-4cb2bc11f0ee
 res
