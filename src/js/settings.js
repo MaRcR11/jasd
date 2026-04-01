@@ -143,14 +143,12 @@ export async function checkForUpdate(showIfNone = false) {
     S._updateLatest = result.latest;
     if (badge) badge.style.display = '';
     if (installBtn) {
-      if (result.downloadUrl) {
-        installBtn.style.minWidth = '';
-        installBtn.textContent = `\u2193 Install v${result.latest}`;
-        installBtn.style.display = '';
-        requestAnimationFrame(() => _lockBtnWidth(installBtn));
-      } else {
-        installBtn.style.display = 'none';
-      }
+      installBtn.style.minWidth = '';
+      installBtn.textContent = result.downloadUrl
+        ? `\u2193 Install v${result.latest}`
+        : `View v${result.latest}`;
+      installBtn.style.display = '';
+      requestAnimationFrame(() => _lockBtnWidth(installBtn));
     }
   } else {
     if (showIfNone) {
@@ -170,7 +168,10 @@ export async function installUpdate() {
   const statusEl = document.getElementById('updateStatusText');
   if (!btn || btn.disabled) return;
 
-  if (!S._updateDownloadUrl) return;
+  if (!S._updateDownloadUrl) {
+    if (S._updateUrl) window.api.openExternal(S._updateUrl);
+    return;
+  }
 
   _lockBtnWidth(btn);
   btn.disabled = true;
