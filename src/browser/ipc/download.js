@@ -213,7 +213,9 @@ function register(mainWindow, cookiePath) {
           const outputFileHash = movedFiles[0]?.hash || null;
           let outputFileSize = null;
           if (outputFile) {
-            try { outputFileSize = fs.statSync(outputFile).size; } catch {}
+            try {
+              outputFileSize = fs.statSync(outputFile).size;
+            } catch {}
           }
           mainWindow.webContents.send('download-complete', {
             downloadId,
