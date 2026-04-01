@@ -40,7 +40,8 @@ contextBridge.exposeInMainWorld('api', {
   isMaximized: () => ipcRenderer.invoke('is-maximized'),
   onWindowState: (cb) => ipcRenderer.on('window-state', (_e, s) => cb(s)),
 
-  downloadAndInstallUpdate: (downloadUrl) => ipcRenderer.invoke('download-and-install-update', { downloadUrl }),
+  downloadAndInstallUpdate: (downloadUrl) =>
+    ipcRenderer.invoke('download-and-install-update', { downloadUrl }),
   cancelUpdateDownload: () => ipcRenderer.invoke('cancel-update-download'),
   onInstallProgress: (cb) => {
     const handler = (_e, pct) => cb(pct);

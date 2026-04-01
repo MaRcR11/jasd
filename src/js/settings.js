@@ -91,8 +91,15 @@ function _resetDownloadUI() {
   const installBtn = document.getElementById('btnInstallUpdate');
   if (barEl) barEl.style.width = '0%';
   if (progressEl) progressEl.style.display = 'none';
-  if (cancelBtn) { cancelBtn.style.display = 'none'; cancelBtn.disabled = false; cancelBtn.style.pointerEvents = ''; }
-  if (installBtn) { installBtn.disabled = false; installBtn.style.pointerEvents = ''; }
+  if (cancelBtn) {
+    cancelBtn.style.display = 'none';
+    cancelBtn.disabled = false;
+    cancelBtn.style.pointerEvents = '';
+  }
+  if (installBtn) {
+    installBtn.disabled = false;
+    installBtn.style.pointerEvents = '';
+  }
 }
 
 export async function checkForUpdate(showIfNone = false) {
@@ -108,7 +115,10 @@ export async function checkForUpdate(showIfNone = false) {
     _lockBtnWidth(checkBtn);
     checkBtn.classList.add('checking');
   }
-  if (statusEl) { statusEl.textContent = ''; statusEl.className = 'update-status-text'; }
+  if (statusEl) {
+    statusEl.textContent = '';
+    statusEl.className = 'update-status-text';
+  }
 
   const result = await window.api.checkForUpdate().catch(() => ({ error: 'Network error' }));
 
@@ -134,7 +144,9 @@ export async function checkForUpdate(showIfNone = false) {
     if (badge) badge.style.display = '';
     if (installBtn) {
       installBtn.style.minWidth = '';
-      installBtn.textContent = result.downloadUrl ? `\u2193 Install v${result.latest}` : 'Open GitHub';
+      installBtn.textContent = result.downloadUrl
+        ? `\u2193 Install v${result.latest}`
+        : 'Open GitHub';
       installBtn.style.display = '';
       requestAnimationFrame(() => _lockBtnWidth(installBtn));
     }
@@ -164,7 +176,10 @@ export async function installUpdate() {
   _lockBtnWidth(btn);
   btn.disabled = true;
   btn.style.pointerEvents = 'none';
-  if (statusEl) { statusEl.textContent = 'Downloading\u2026'; statusEl.className = 'update-status-text downloading'; }
+  if (statusEl) {
+    statusEl.textContent = 'Downloading\u2026';
+    statusEl.className = 'update-status-text downloading';
+  }
 
   const progressEl = document.getElementById('updateDlProgress');
   const barEl = document.getElementById('updateDlBar');

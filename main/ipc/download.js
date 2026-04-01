@@ -212,7 +212,12 @@ function register(mainWindow, cookiePath) {
           const movedFiles = moveFromTmp(tmpDir, outDir, downloadId);
           const outputFile = movedFiles[0]?.path || null;
           const outputFileHash = movedFiles[0]?.hash || null;
-          mainWindow.webContents.send('download-complete', { downloadId, outputDir: outDir, outputFile, outputFileHash });
+          mainWindow.webContents.send('download-complete', {
+            downloadId,
+            outputDir: outDir,
+            outputFile,
+            outputFileHash,
+          });
           resolve({ success: true, outputDir: outDir, outputFile, outputFileHash });
         } else {
           try {

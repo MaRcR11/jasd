@@ -1,8 +1,24 @@
 'use strict';
 const { execSync } = require('child_process');
+const path = require('path');
+
+function _bundledBinDir() {
+  try {
+    const { app } = require('electron');
+    const base = app.isPackaged ? process.resourcesPath : path.join(__dirname, '..', '..');
+    return path.join(base, 'bin');
+  } catch {
+    return null;
+  }
+}
 
 function getYtDlpPath() {
-  for (const c of ['yt-dlp', 'yt-dlp.exe']) {
+  const binDir = _bundledBinDir();
+  const bundled = binDir
+    ? [path.join(binDir, process.platform === 'win32' ? 'yt-dlp.exe' : 'yt-dlp')]
+    : [];
+  const system = process.platform === 'win32' ? ['yt-dlp', 'yt-dlp.exe'] : ['yt-dlp'];
+  for (const c of [...bundled, ...system]) {
     try {
       execSync(`"${c}" --version`, { stdio: 'ignore' });
       return c;

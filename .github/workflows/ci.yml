@@ -42,6 +42,33 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci --ignore-scripts
+
+      - name: Download yt-dlp (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe" -OutFile "bin/yt-dlp.exe"
+
+      - name: Download yt-dlp (macOS / Linux)
+        if: matrix.os != 'windows-latest'
+        run: |
+          curl -fsSL "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp" -o bin/yt-dlp
+          chmod +x bin/yt-dlp
+
+      - name: Generate icon.icns (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          mkdir -p icon.iconset
+          for size in 16 32 64 128 256 512; do
+            sips -z $size $size assets/icon.png --out icon.iconset/icon_${size}x${size}.png
+          done
+          sips -z 32 32 assets/icon.png --out icon.iconset/icon_16x16@2x.png
+          sips -z 64 64 assets/icon.png --out icon.iconset/icon_32x32@2x.png
+          sips -z 256 256 assets/icon.png --out icon.iconset/icon_128x128@2x.png
+          sips -z 512 512 assets/icon.png --out icon.iconset/icon_256x256@2x.png
+          iconutil -c icns icon.iconset -o assets/icon.icns
+          rm -rf icon.iconset
+
       - name: Build
         run: npm run ${{ matrix.script }} -- --publish never
       - name: Upload artifacts

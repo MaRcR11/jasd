@@ -111,10 +111,16 @@ function register(cookiePath, logPath) {
         res.on('end', () => {
           try {
             const json = JSON.parse(data);
-            if (json.message) { resolve({ error: json.message }); return; }
+            if (json.message) {
+              resolve({ error: json.message });
+              return;
+            }
             const latest = (json.tag_name || '').replace(/^v/, '');
             const url = json.html_url || 'https://github.com/MaRcR11/jasd/releases/latest';
-            if (!latest) { resolve({ error: 'No release found' }); return; }
+            if (!latest) {
+              resolve({ error: 'No release found' });
+              return;
+            }
             const hasUpdate = compareVersions(latest, cv) > 0;
             const exeAsset = (json.assets || []).find((a) => a.name && a.name.endsWith('.exe'));
             const downloadUrl = exeAsset ? exeAsset.browser_download_url : null;
@@ -130,7 +136,10 @@ function register(cookiePath, logPath) {
         writeLog(`Update check network error: ${e.message}`);
         resolve({ error: e.message });
       });
-      req.on('timeout', () => { req.destroy(); resolve({ error: 'Request timed out' }); });
+      req.on('timeout', () => {
+        req.destroy();
+        resolve({ error: 'Request timed out' });
+      });
     });
   });
 
@@ -169,44 +178,54 @@ function register(cookiePath, logPath) {
       const file = fs.createWriteStream(destPath);
       _activeDownloadFile = file;
       const doGet = (url, hops) => {
-        if (hops > 8) { done({ error: 'Too many redirects' }); return; }
+        if (hops > 8) {
+          done({ error: 'Too many redirects' });
+          return;
+        }
         const mod = url.startsWith('https') ? https : require('http');
-        mod.get(url, { headers: { 'User-Agent': 'jasd-app' } }, (res) => {
-          if ([301, 302, 303, 307, 308].includes(res.statusCode)) {
-            res.resume();
-            doGet(res.headers.location, hops + 1);
-            return;
-          }
-          _activeDownloadRes = res;
-          const total = parseInt(res.headers['content-length'] || '0', 10);
-          let received = 0;
-          let lastPct = -1;
-          res.on('data', (chunk) => {
-            received += chunk.length;
-            if (total > 0) {
-              const pct = Math.round((received / total) * 100);
-              if (pct !== lastPct) {
-                lastPct = pct;
-                try { event.sender.send('install-progress', pct); } catch {}
-              }
+        mod
+          .get(url, { headers: { 'User-Agent': 'jasd-app' } }, (res) => {
+            if ([301, 302, 303, 307, 308].includes(res.statusCode)) {
+              res.resume();
+              doGet(res.headers.location, hops + 1);
+              return;
             }
-          });
-          res.pipe(file);
-          file.on('finish', () => {
-            file.close(() => {
-              writeLog(`Update installer saved to ${destPath}`);
-              shell.openPath(destPath)
-                .then(() => done({ success: true }))
-                .catch((e) => done({ error: e.message }));
+            _activeDownloadRes = res;
+            const total = parseInt(res.headers['content-length'] || '0', 10);
+            let received = 0;
+            let lastPct = -1;
+            res.on('data', (chunk) => {
+              received += chunk.length;
+              if (total > 0) {
+                const pct = Math.round((received / total) * 100);
+                if (pct !== lastPct) {
+                  lastPct = pct;
+                  try {
+                    event.sender.send('install-progress', pct);
+                  } catch {}
+                }
+              }
             });
-          });
-          const onStreamError = () => {
-            try { fs.unlinkSync(destPath); } catch {}
-            done(_downloadCancelled ? { cancelled: true } : { error: 'Download failed' });
-          };
-          file.on('error', onStreamError);
-          res.on('error', onStreamError);
-        }).on('error', (e) => done({ error: e.message }));
+            res.pipe(file);
+            file.on('finish', () => {
+              file.close(() => {
+                writeLog(`Update installer saved to ${destPath}`);
+                shell
+                  .openPath(destPath)
+                  .then(() => done({ success: true }))
+                  .catch((e) => done({ error: e.message }));
+              });
+            });
+            const onStreamError = () => {
+              try {
+                fs.unlinkSync(destPath);
+              } catch {}
+              done(_downloadCancelled ? { cancelled: true } : { error: 'Download failed' });
+            };
+            file.on('error', onStreamError);
+            res.on('error', onStreamError);
+          })
+          .on('error', (e) => done({ error: e.message }));
       };
       doGet(downloadUrl, 0);
     });

@@ -17,12 +17,12 @@
         <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
           <defs>
             <linearGradient id="logoGradTb" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#5b7cf6"/>
-              <stop offset="100%" stop-color="#7c5cf6"/>
+              <stop offset="0%" stop-color="#5b7cf6" />
+              <stop offset="100%" stop-color="#7c5cf6" />
             </linearGradient>
           </defs>
-          <rect width="32" height="32" rx="7" fill="url(#logoGradTb)"/>
-          <path d="M10 8l14 8-14 8V8z" fill="white"/>
+          <rect width="32" height="32" rx="7" fill="url(#logoGradTb)" />
+          <path d="M10 8l14 8-14 8V8z" fill="white" />
         </svg>
         <span class="tb-appname">JASD</span>
       </div>
@@ -55,7 +55,7 @@
               />
             </svg>
             <span data-i18n="nav_settings">Settings</span>
-            <span class="badge update-badge" id="updateBadge" style="display:none">1</span>
+            <span class="badge update-badge" id="updateBadge" style="display: none">1</span>
           </button>
         </nav>
         <div class="sidebar-footer">
@@ -294,12 +294,15 @@
               <div class="sgroup-body">
                 <div class="field-row">
                   <span class="field-label" data-i18n="label_output_folder">Output Folder</span>
-                  <div class="irow" style="margin-left:auto;flex:1;min-width:0;max-width:360px">
+                  <div
+                    class="irow"
+                    style="margin-left: auto; flex: 1; min-width: 0; max-width: 360px"
+                  >
                     <input
                       type="text"
                       id="settOutputDir"
                       class="txt-input"
-                      style="flex:1;min-width:0"
+                      style="flex: 1; min-width: 0"
                       placeholder="~/Downloads"
                       readonly
                     />
@@ -448,19 +451,27 @@
               <div class="sgroup-body">
                 <div class="field-row">
                   <span class="field-label">Check for updates on startup</span>
-                  <label class="switch" style="margin-left:auto">
-                    <input type="checkbox" id="chkCheckUpdates" checked /><span class="slider"></span>
+                  <label class="switch" style="margin-left: auto">
+                    <input type="checkbox" id="chkCheckUpdates" checked /><span
+                      class="slider"
+                    ></span>
                   </label>
                 </div>
                 <div class="field-row">
                   <div id="updateStatusText" class="update-status-text"></div>
-                  <div class="irow" style="margin-left:auto;gap:6px">
-                    <button class="btn-secondary" id="btnCancelUpdate" style="display:none">Cancel</button>
-                    <button class="btn-secondary update-install-btn" id="btnInstallUpdate" style="display:none"></button>
+                  <div class="irow" style="margin-left: auto; gap: 6px">
+                    <button class="btn-secondary" id="btnCancelUpdate" style="display: none">
+                      Cancel
+                    </button>
+                    <button
+                      class="btn-secondary update-install-btn"
+                      id="btnInstallUpdate"
+                      style="display: none"
+                    ></button>
                     <button class="btn-secondary" id="btnCheckUpdate">Check Now</button>
                   </div>
                 </div>
-                <div class="update-dl-progress" id="updateDlProgress" style="display:none">
+                <div class="update-dl-progress" id="updateDlProgress" style="display: none">
                   <div class="update-dl-bar" id="updateDlBar"></div>
                 </div>
               </div>
@@ -493,12 +504,12 @@
                     <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
                       <defs>
                         <linearGradient id="logoGradAbout" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stop-color="#5b7cf6"/>
-                          <stop offset="100%" stop-color="#7c5cf6"/>
+                          <stop offset="0%" stop-color="#5b7cf6" />
+                          <stop offset="100%" stop-color="#7c5cf6" />
                         </linearGradient>
                       </defs>
-                      <rect width="32" height="32" rx="7" fill="url(#logoGradAbout)"/>
-                      <path d="M10 8l14 8-14 8V8z" fill="white"/>
+                      <rect width="32" height="32" rx="7" fill="url(#logoGradAbout)" />
+                      <path d="M10 8l14 8-14 8V8z" fill="white" />
                     </svg>
                     <span>JASD</span>
                     <span class="about-ver" id="aboutVer"></span>
@@ -580,7 +591,7 @@
           </button>
         </div>
         <pre class="log-content" id="logContent"></pre>
-        <div class="log-loading" id="logLoading" style="display:none">
+        <div class="log-loading" id="logLoading" style="display: none">
           <div class="log-loading-spinner"></div>
           <span>Loading…</span>
         </div>

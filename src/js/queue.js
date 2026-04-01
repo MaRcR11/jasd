@@ -68,7 +68,14 @@ export function onComplete(data) {
   const { downloadId, outputDir, outputFile, outputFileHash } = data;
   S.activeDownloadIds.delete(downloadId);
   const ts = new Date().toISOString();
-  patchQueue(downloadId, { status: 'done', percent: 100, outputDir, outputFile, outputFileHash, completedAt: ts });
+  patchQueue(downloadId, {
+    status: 'done',
+    percent: 100,
+    outputDir,
+    outputFile,
+    outputFileHash,
+    completedAt: ts,
+  });
   persistQueue();
   updateBadge();
   processNextInQueue();
