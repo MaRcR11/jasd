@@ -1,5 +1,5 @@
 ﻿import { S } from '../state.js';
-import { escHtml, formatTs } from '../lib/formatters.js';
+import { escHtml, formatTs, formatBytes } from '../lib/formatters.js';
 import { syncOverlayToView, refreshOverlay } from '../components/ui.js';
 
 const STATUS_MAP = {
@@ -78,7 +78,7 @@ export function onProgress(data) {
 }
 
 export function onComplete(data) {
-  const { downloadId, outputDir, outputFile, outputFileHash } = data;
+  const { downloadId, outputDir, outputFile, outputFileHash, outputFileSize } = data;
   S.activeDownloadIds.delete(downloadId);
   const ts = new Date().toISOString();
   patchQueue(downloadId, {
@@ -87,6 +87,7 @@ export function onComplete(data) {
     outputDir,
     outputFile,
     outputFileHash,
+    outputFileSize: outputFileSize ?? null,
     completedAt: ts,
   });
   persistQueue();
@@ -232,7 +233,10 @@ export function updateQueueEl(el, item) {
     const parts = [pct, item.speed, item.eta ? `ETA ${item.eta}` : ''].filter(Boolean);
     stat.textContent = parts.join(' · ');
   } else if (item.status === 'done' && item.completedAt) {
-    stat.textContent = formatTs(item.completedAt);
+    const parts = [formatTs(item.completedAt)];
+    if (item.fileType) parts.push(item.fileType.toUpperCase());
+    if (item.outputFileSize != null) parts.push(formatBytes(item.outputFileSize));
+    stat.textContent = parts.join(' · ');
   } else if (item.status === 'queued') {
     stat.textContent = 'Waiting…';
   } else {
