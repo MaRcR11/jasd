@@ -2,6 +2,7 @@
 import { formatBytes } from './formatters.js';
 import { showToast } from './ui.js';
 import { applyTheme, THEMES } from './themes.js';
+import { t } from './i18n.js';
 
 export function applySettings() {
   const downloadsDir = S._downloadsDir || '';
@@ -129,14 +130,14 @@ export async function checkForUpdate(showIfNone = false) {
 
   if (result.error) {
     if (showIfNone) {
-      statusEl.textContent = `Check failed: ${result.error}`;
+      statusEl.textContent = t('update_check_failed') + ': ' + result.error;
       statusEl.className = 'update-status-text error';
     }
     return;
   }
 
   if (result.hasUpdate) {
-    statusEl.textContent = `v${result.latest} available`;
+    statusEl.textContent = t('update_available').replace('{v}', result.latest);
     statusEl.className = 'update-status-text has-update';
     S._updateUrl = result.url;
     S._updateDownloadUrl = result.downloadUrl || null;
@@ -145,14 +146,14 @@ export async function checkForUpdate(showIfNone = false) {
     if (installBtn) {
       installBtn.style.minWidth = '';
       installBtn.textContent = result.downloadUrl
-        ? `\u2193 Install v${result.latest}`
-        : `View v${result.latest}`;
+        ? t('btn_install_update') + ' v' + result.latest
+        : t('btn_view_update') + ' v' + result.latest;
       installBtn.style.display = '';
       requestAnimationFrame(() => _lockBtnWidth(installBtn));
     }
   } else {
     if (showIfNone) {
-      statusEl.textContent = 'You are up to date';
+      statusEl.textContent = t('update_up_to_date');
       statusEl.className = 'update-status-text up-to-date';
     } else {
       statusEl.textContent = '';
@@ -177,7 +178,7 @@ export async function installUpdate() {
   btn.disabled = true;
   btn.style.pointerEvents = 'none';
   if (statusEl) {
-    statusEl.textContent = 'Downloading\u2026';
+    statusEl.textContent = t('update_downloading');
     statusEl.className = 'update-status-text downloading';
   }
 
@@ -196,12 +197,12 @@ export async function installUpdate() {
 
   if (result.error) {
     if (statusEl) {
-      statusEl.textContent = `Download failed: ${result.error}`;
+      statusEl.textContent = t('update_dl_failed') + ': ' + result.error;
       statusEl.className = 'update-status-text error';
     }
   } else {
     if (statusEl) {
-      statusEl.textContent = 'Installing\u2026 app will restart shortly';
+      statusEl.textContent = t('update_installing');
       statusEl.className = 'update-status-text downloading';
     }
     if (btn) btn.style.display = 'none';
