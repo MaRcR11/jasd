@@ -9,9 +9,7 @@ function init(logPath) {
 function writeLog(msg) {
   if (!_logPath) return;
   const ts = new Date().toISOString();
-  try {
-    fs.appendFileSync(_logPath, `[${ts}] ${msg}\n`);
-  } catch {}
+  fs.appendFile(_logPath, `[${ts}] ${msg}\n`, () => {});
 }
 
 module.exports = { init, writeLog };

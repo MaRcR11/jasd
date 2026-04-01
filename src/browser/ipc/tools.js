@@ -79,10 +79,21 @@ function register(cookiePath, logPath) {
     }
   });
 
+  const _dirCache = new Map();
+  const DIR_CACHE_TTL = 5000;
+
   ipcMain.handle('check-output-exists', (_e, { outputDir, title, ext }) => {
     try {
       if (!outputDir || !fs.existsSync(outputDir)) return null;
-      const files = fs.readdirSync(outputDir);
+      let files;
+      const cached = _dirCache.get(outputDir);
+      const now = Date.now();
+      if (cached && now - cached.ts < DIR_CACHE_TTL) {
+        files = cached.files;
+      } else {
+        files = fs.readdirSync(outputDir);
+        _dirCache.set(outputDir, { files, ts: now });
+      }
       const needle = title.toLowerCase().slice(0, 40);
       const extLower = ext.toLowerCase();
       const found = files.find(

@@ -109,9 +109,16 @@ function setupListeners() {
   document.getElementById('btnCancelDl').onclick = handleCancelActive;
 
   document.getElementById('btnClearDone').addEventListener('pointerdown', () => {
-    const removable = ['done', 'cancelled', 'error'];
-    S.queue = S.queue.filter((q) => !removable.includes(q.status));
-    document.querySelectorAll('.queue-item').forEach((el) => {
+    const removable = new Set(['done', 'cancelled', 'error']);
+    const removedGroupIds = new Set(
+      S.queue.filter((q) => q.isPlaylistGroup && removable.has(q.status)).map((q) => q.id)
+    );
+    S.queue = S.queue.filter((q) => {
+      if (q.isPlaylistGroup) return !removedGroupIds.has(q.id);
+      if (q.parentId) return !removedGroupIds.has(q.parentId);
+      return !removable.has(q.status);
+    });
+    document.querySelectorAll('.queue-item, .qi-group').forEach((el) => {
       const id = el.id.replace('qi-', '');
       if (!S.queue.find((q) => q.id === id)) el.remove();
     });

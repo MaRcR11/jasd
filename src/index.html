@@ -118,6 +118,19 @@
               </div>
             </div>
 
+            <div class="playlist-panel" id="playlistPanel" style="display: none">
+              <div class="pl-header">
+                <div class="pl-thumb-wrap">
+                  <img class="pl-thumb" id="plThumb" src="" alt="" />
+                </div>
+                <div class="pl-meta">
+                  <div class="pl-title" id="plTitle"></div>
+                  <div class="pl-sub" id="plSub"></div>
+                </div>
+              </div>
+              <div class="pl-list" id="plList"></div>
+            </div>
+
             <div class="options-panel" id="optionsPanel" style="display: none">
               <div class="tab-bar">
                 <button class="tab active" data-tab="media" data-i18n="tab_media">Media</button>
@@ -219,7 +232,7 @@
                     <input type="checkbox" id="chkMeta" checked /><span class="slider"></span>
                   </label>
                 </div>
-                <div class="field-row">
+                <div class="field-row" id="customFilenameRow">
                   <span class="field-label" data-i18n="label_filename">Custom Filename</span>
                   <input
                     type="text"
@@ -239,7 +252,7 @@
                     placeholder="e.g. 2M, 500K"
                   />
                 </div>
-                <div class="field-row">
+                <div class="field-row" id="playlistItemsRow" style="display: none">
                   <span class="field-label" data-i18n="label_playlist">Playlist Items</span>
                   <input
                     type="text"
@@ -567,6 +580,32 @@
         <span id="dlOvPct">0%</span>
         <span id="dlOvSpeed"></span>
         <span id="dlOvEta"></span>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="playlistOverwriteModal" style="display: none">
+      <div class="modal-box ow-modal-box">
+        <div class="ow-icon">
+          <svg
+            viewBox="0 0 24 24"
+            width="40"
+            height="40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="12" cy="12" r="11" fill="var(--warn)" opacity="0.15" />
+            <circle cx="12" cy="12" r="11" stroke="var(--warn)" stroke-width="1.6" />
+            <rect x="11" y="7" width="2" height="6" rx="1" fill="var(--warn)" />
+            <circle cx="12" cy="16.5" r="1.2" fill="var(--warn)" />
+          </svg>
+        </div>
+        <div class="ow-title">Files already exist</div>
+        <div class="ow-msg" id="plOwMsg">Some files already exist in the output folder.</div>
+        <div class="ow-actions">
+          <button class="btn-secondary" id="btnPlOwCancel">Cancel</button>
+          <button class="btn-secondary" id="btnPlOwSkip">Skip Existing</button>
+          <button class="btn-ow-replace" id="btnPlOwOverwrite">Overwrite All</button>
+        </div>
       </div>
     </div>
 
