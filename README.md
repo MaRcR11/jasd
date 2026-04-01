@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/logo-text.svg" height="28" alt="JASD"/></p>
+<p align="center"><img src="assets/logo-text.svg" height="42" alt="JASD"/></p>
 
 <p align="center">A fast, clean desktop app for downloading videos from YouTube and hundreds of other sites.</p>
 
