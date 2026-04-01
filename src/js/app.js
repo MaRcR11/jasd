@@ -19,6 +19,10 @@ import { applySettings, checkTools, setupSettingsListeners } from './settings.js
   ]);
 
   try {
+    S._downloadsDir = await window.api.getDownloadsDir();
+  } catch {}
+
+  try {
     S.appVersion = await window.api.getAppVersion();
   } catch {}
 
@@ -50,6 +54,10 @@ import { applySettings, checkTools, setupSettingsListeners } from './settings.js
   wireDownloadEvents();
   setupListeners();
   setupSettingsListeners();
+
+  if (S.settings.checkForUpdates !== false) {
+    import('./settings.js').then((m) => m.checkForUpdate(false));
+  }
 
   const verEl = document.getElementById('appVerText');
   if (verEl) verEl.textContent = `JASD v${S.appVersion}`;

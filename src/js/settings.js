@@ -4,21 +4,18 @@ import { showToast } from './ui.js';
 import { applyTheme, THEMES } from './themes.js';
 
 export function applySettings() {
-  if (S.settings.outputDir) {
-    document.getElementById('settOutputDir').value = S.settings.outputDir;
-  }
-  if (S.settings.alwaysOverwrite) {
-    const chk = document.getElementById('chkAlwaysOverwrite');
-    if (chk) chk.checked = true;
-  }
+  const downloadsDir = S._downloadsDir || '';
+  document.getElementById('settOutputDir').value = S.settings.outputDir || downloadsDir;
+  const chkOw = document.getElementById('chkAlwaysOverwrite');
+  if (chkOw) chkOw.checked = !!S.settings.alwaysOverwrite;
+  const chkUpdEl = document.getElementById('chkCheckUpdates');
+  if (chkUpdEl) chkUpdEl.checked = S.settings.checkForUpdates !== false;
   const chkOpus = document.getElementById('chkPreferOpus');
   if (chkOpus) chkOpus.checked = !!S.settings.preferOpus;
   const themeEl = document.getElementById('settTheme');
   if (themeEl && S.settings.theme) themeEl.value = S.settings.theme;
-
   const mcEl = document.getElementById('settMaxConcurrent');
-  if (mcEl && S.settings.maxConcurrent) mcEl.value = String(S.settings.maxConcurrent);
-
+  if (mcEl) mcEl.value = String(S.settings.maxConcurrent || 1);
   const ctRow = document.getElementById('customThemeRow');
   if (ctRow) ctRow.style.display = S.settings.theme === 'custom' ? '' : 'none';
 }
@@ -79,11 +76,135 @@ export async function deleteCookies() {
   showToast('Cookie file removed.', 'info');
 }
 
+let _updateChecking = false;
+
+function _lockBtnWidth(btn) {
+  if (!btn || btn.style.minWidth) return;
+  const w = btn.getBoundingClientRect().width;
+  if (w > 0) btn.style.minWidth = w + 'px';
+}
+
+function _resetDownloadUI() {
+  const progressEl = document.getElementById('updateDlProgress');
+  const barEl = document.getElementById('updateDlBar');
+  const cancelBtn = document.getElementById('btnCancelUpdate');
+  const installBtn = document.getElementById('btnInstallUpdate');
+  if (barEl) barEl.style.width = '0%';
+  if (progressEl) progressEl.style.display = 'none';
+  if (cancelBtn) { cancelBtn.style.display = 'none'; cancelBtn.disabled = false; cancelBtn.style.pointerEvents = ''; }
+  if (installBtn) { installBtn.disabled = false; installBtn.style.pointerEvents = ''; }
+}
+
+export async function checkForUpdate(showIfNone = false) {
+  if (_updateChecking) return;
+  _updateChecking = true;
+
+  const statusEl = document.getElementById('updateStatusText');
+  const badge = document.getElementById('updateBadge');
+  const checkBtn = document.getElementById('btnCheckUpdate');
+  const installBtn = document.getElementById('btnInstallUpdate');
+
+  if (checkBtn) {
+    _lockBtnWidth(checkBtn);
+    checkBtn.classList.add('checking');
+  }
+  if (statusEl) { statusEl.textContent = ''; statusEl.className = 'update-status-text'; }
+
+  const result = await window.api.checkForUpdate().catch(() => ({ error: 'Network error' }));
+
+  if (checkBtn) checkBtn.classList.remove('checking');
+  _updateChecking = false;
+
+  if (!statusEl) return;
+
+  if (result.error) {
+    if (showIfNone) {
+      statusEl.textContent = `Check failed: ${result.error}`;
+      statusEl.className = 'update-status-text error';
+    }
+    return;
+  }
+
+  if (result.hasUpdate) {
+    statusEl.textContent = `v${result.latest} available`;
+    statusEl.className = 'update-status-text has-update';
+    S._updateUrl = result.url;
+    S._updateDownloadUrl = result.downloadUrl || null;
+    S._updateLatest = result.latest;
+    if (badge) badge.style.display = '';
+    if (installBtn) {
+      installBtn.style.minWidth = '';
+      installBtn.textContent = result.downloadUrl ? `\u2193 Install v${result.latest}` : 'Open GitHub';
+      installBtn.style.display = '';
+      requestAnimationFrame(() => _lockBtnWidth(installBtn));
+    }
+  } else {
+    if (showIfNone) {
+      statusEl.textContent = 'You are up to date';
+      statusEl.className = 'update-status-text up-to-date';
+    } else {
+      statusEl.textContent = '';
+      statusEl.className = 'update-status-text';
+    }
+    if (badge) badge.style.display = 'none';
+    if (installBtn) installBtn.style.display = 'none';
+  }
+}
+
+export async function installUpdate() {
+  const btn = document.getElementById('btnInstallUpdate');
+  const statusEl = document.getElementById('updateStatusText');
+  if (!btn || btn.disabled) return;
+
+  if (!S._updateDownloadUrl) {
+    if (S._updateUrl) window.api.openExternal(S._updateUrl);
+    return;
+  }
+
+  _lockBtnWidth(btn);
+  btn.disabled = true;
+  btn.style.pointerEvents = 'none';
+  if (statusEl) { statusEl.textContent = 'Downloading\u2026'; statusEl.className = 'update-status-text downloading'; }
+
+  const progressEl = document.getElementById('updateDlProgress');
+  const barEl = document.getElementById('updateDlBar');
+  const cancelBtn = document.getElementById('btnCancelUpdate');
+  if (barEl) barEl.style.width = '0%';
+  if (progressEl) progressEl.style.display = '';
+  if (cancelBtn) cancelBtn.style.display = '';
+
+  const result = await window.api.downloadAndInstallUpdate(S._updateDownloadUrl);
+
+  _resetDownloadUI();
+
+  if (result.cancelled) return;
+
+  if (result.error) {
+    if (statusEl) {
+      statusEl.textContent = `Download failed: ${result.error}`;
+      statusEl.className = 'update-status-text error';
+    }
+  } else {
+    if (statusEl) {
+      statusEl.textContent = 'Installer launched \u2014 the app will close.';
+      statusEl.className = 'update-status-text up-to-date';
+    }
+    if (btn) btn.style.display = 'none';
+  }
+}
+
 export async function viewLog() {
-  const content = await window.api.getLogContent();
+  const modal = document.getElementById('logModal');
   const pre = document.getElementById('logContent');
+  const loading = document.getElementById('logLoading');
+  pre.textContent = '';
+  pre.style.display = 'none';
+  loading.style.display = 'flex';
+  modal.style.display = 'flex';
+  const content = await window.api.getLogContent();
+  loading.style.display = 'none';
+  pre.style.display = '';
   pre.textContent = content;
-  document.getElementById('logModal').style.display = 'flex';
   pre.scrollTop = pre.scrollHeight;
 }
 
@@ -161,6 +282,55 @@ export function setupSettingsListeners() {
   };
   document.getElementById('btnCloseLog').onclick = () => {
     document.getElementById('logModal').style.display = 'none';
+  };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const logModal = document.getElementById('logModal');
+      if (logModal.style.display !== 'none') logModal.style.display = 'none';
+    }
+  });
+
+  const chkUpd = document.getElementById('chkCheckUpdates');
+  if (chkUpd) {
+    chkUpd.addEventListener('change', async (e) => {
+      await saveSetting('checkForUpdates', e.target.checked);
+    });
+  }
+
+  document.getElementById('btnCheckUpdate').onclick = () => checkForUpdate(true);
+  document.getElementById('btnInstallUpdate').onclick = installUpdate;
+  document.getElementById('btnCancelUpdate').onclick = async () => {
+    const cancelBtn = document.getElementById('btnCancelUpdate');
+    cancelBtn.disabled = true;
+    cancelBtn.style.pointerEvents = 'none';
+    await window.api.cancelUpdateDownload();
+  };
+
+  window.api.onInstallProgress((pct) => {
+    const bar = document.getElementById('updateDlBar');
+    if (bar) bar.style.width = pct + '%';
+  });
+
+  document.getElementById('btnRestoreDefaults').onclick = async () => {
+    const DEFAULTS = {
+      outputDir: S._downloadsDir || '',
+      alwaysOverwrite: false,
+      preferOpus: false,
+      maxConcurrent: 1,
+      theme: 'dark',
+      lang: 'auto',
+      checkForUpdates: true,
+    };
+    S.settings = { ...S.settings, ...DEFAULTS };
+    await window.api.saveSettings(DEFAULTS);
+    applySettings();
+    const { applyTheme } = await import('./themes.js');
+    applyTheme('dark');
+    const { applyLang, detectSystemLang } = await import('./i18n.js');
+    S.lang = detectSystemLang();
+    applyLang();
+    showToast('Settings restored to defaults.', 'info');
   };
 }
 

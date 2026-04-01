@@ -1,9 +1,14 @@
 'use strict';
-const { ipcMain, shell } = require('electron');
+const { ipcMain, shell, app } = require('electron');
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 const { writeLog } = require('../utils/logger');
 const { getYtDlpPath, getYtDlpVersion, getFfmpegVersion } = require('../utils/ytdlp');
+
+let _activeDownloadRes = null;
+let _activeDownloadFile = null;
+let _downloadCancelled = false;
 
 function register(cookiePath, logPath) {
   ipcMain.handle('get-log-path', () => logPath);
@@ -90,6 +95,132 @@ function register(cookiePath, logPath) {
       return null;
     }
   });
+
+  ipcMain.handle('check-for-update', async () => {
+    const cv = app.getVersion();
+    return new Promise((resolve) => {
+      const opts = {
+        hostname: 'api.github.com',
+        path: '/repos/MaRcR11/jasd/releases/latest',
+        headers: { 'User-Agent': 'jasd-app' },
+        timeout: 8000,
+      };
+      const req = https.get(opts, (res) => {
+        let data = '';
+        res.on('data', (c) => (data += c));
+        res.on('end', () => {
+          try {
+            const json = JSON.parse(data);
+            if (json.message) { resolve({ error: json.message }); return; }
+            const latest = (json.tag_name || '').replace(/^v/, '');
+            const url = json.html_url || 'https://github.com/MaRcR11/jasd/releases/latest';
+            if (!latest) { resolve({ error: 'No release found' }); return; }
+            const hasUpdate = compareVersions(latest, cv) > 0;
+            const exeAsset = (json.assets || []).find((a) => a.name && a.name.endsWith('.exe'));
+            const downloadUrl = exeAsset ? exeAsset.browser_download_url : null;
+            writeLog(`Update check: current=${cv}, latest=${latest}, hasUpdate=${hasUpdate}`);
+            resolve({ latest, hasUpdate, url, downloadUrl });
+          } catch (e) {
+            writeLog(`Update check parse error: ${e.message}`);
+            resolve({ error: 'Failed to parse response' });
+          }
+        });
+      });
+      req.on('error', (e) => {
+        writeLog(`Update check network error: ${e.message}`);
+        resolve({ error: e.message });
+      });
+      req.on('timeout', () => { req.destroy(); resolve({ error: 'Request timed out' }); });
+    });
+  });
+
+  ipcMain.handle('cancel-update-download', () => {
+    _downloadCancelled = true;
+    if (_activeDownloadRes) {
+      _activeDownloadRes.destroy(new Error('Cancelled'));
+      _activeDownloadRes = null;
+    }
+    if (_activeDownloadFile) {
+      _activeDownloadFile.destroy();
+      _activeDownloadFile = null;
+    }
+    return true;
+  });
+
+  ipcMain.handle('download-and-install-update', async (event, { downloadUrl }) => {
+    const os = require('os');
+    const baseName = downloadUrl.split('/').pop().split('?')[0] || 'jasd-update.exe';
+    const ext = path.extname(baseName);
+    const stem = path.basename(baseName, ext);
+    const destPath = path.join(os.tmpdir(), `${stem}-${Date.now()}${ext}`);
+    _downloadCancelled = false;
+    _activeDownloadRes = null;
+    _activeDownloadFile = null;
+    return new Promise((resolve) => {
+      let settled = false;
+      const done = (val) => {
+        if (!settled) {
+          settled = true;
+          _activeDownloadRes = null;
+          _activeDownloadFile = null;
+          resolve(val);
+        }
+      };
+      const file = fs.createWriteStream(destPath);
+      _activeDownloadFile = file;
+      const doGet = (url, hops) => {
+        if (hops > 8) { done({ error: 'Too many redirects' }); return; }
+        const mod = url.startsWith('https') ? https : require('http');
+        mod.get(url, { headers: { 'User-Agent': 'jasd-app' } }, (res) => {
+          if ([301, 302, 303, 307, 308].includes(res.statusCode)) {
+            res.resume();
+            doGet(res.headers.location, hops + 1);
+            return;
+          }
+          _activeDownloadRes = res;
+          const total = parseInt(res.headers['content-length'] || '0', 10);
+          let received = 0;
+          let lastPct = -1;
+          res.on('data', (chunk) => {
+            received += chunk.length;
+            if (total > 0) {
+              const pct = Math.round((received / total) * 100);
+              if (pct !== lastPct) {
+                lastPct = pct;
+                try { event.sender.send('install-progress', pct); } catch {}
+              }
+            }
+          });
+          res.pipe(file);
+          file.on('finish', () => {
+            file.close(() => {
+              writeLog(`Update installer saved to ${destPath}`);
+              shell.openPath(destPath)
+                .then(() => done({ success: true }))
+                .catch((e) => done({ error: e.message }));
+            });
+          });
+          const onStreamError = () => {
+            try { fs.unlinkSync(destPath); } catch {}
+            done(_downloadCancelled ? { cancelled: true } : { error: 'Download failed' });
+          };
+          file.on('error', onStreamError);
+          res.on('error', onStreamError);
+        }).on('error', (e) => done({ error: e.message }));
+      };
+      doGet(downloadUrl, 0);
+    });
+  });
+}
+
+function compareVersions(a, b) {
+  const pa = a.split('.').map(Number);
+  const pb = b.split('.').map(Number);
+  for (let i = 0; i < 3; i++) {
+    const diff = (pa[i] || 0) - (pb[i] || 0);
+    if (diff !== 0) return diff;
+  }
+  return 0;
 }
 
 module.exports = { register };

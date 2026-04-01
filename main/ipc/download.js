@@ -4,6 +4,23 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const crypto = require('crypto');
+
+const PARTIAL_HASH_BYTES = 1024 * 1024; // first 1 MB
+
+function partialHash(filePath) {
+  try {
+    const fd = fs.openSync(filePath, 'r');
+    const stat = fs.fstatSync(fd);
+    const size = Math.min(stat.size, PARTIAL_HASH_BYTES);
+    const buf = Buffer.alloc(size);
+    if (size > 0) fs.readSync(fd, buf, 0, size, 0);
+    fs.closeSync(fd);
+    return crypto.createHash('sha256').update(buf).digest('hex');
+  } catch {
+    return null;
+  }
+}
 const { getYtDlpPath } = require('../utils/ytdlp');
 const { writeLog } = require('../utils/logger');
 
@@ -192,9 +209,11 @@ function register(mainWindow, cookiePath) {
         }
 
         if (code === 0 || code === null) {
-          moveFromTmp(tmpDir, outDir, downloadId);
-          mainWindow.webContents.send('download-complete', { downloadId, outputDir: outDir });
-          resolve({ success: true, outputDir: outDir });
+          const movedFiles = moveFromTmp(tmpDir, outDir, downloadId);
+          const outputFile = movedFiles[0]?.path || null;
+          const outputFileHash = movedFiles[0]?.hash || null;
+          mainWindow.webContents.send('download-complete', { downloadId, outputDir: outDir, outputFile, outputFileHash });
+          resolve({ success: true, outputDir: outDir, outputFile, outputFileHash });
         } else {
           try {
             fs.rmSync(tmpDir, { recursive: true, force: true });
@@ -244,6 +263,20 @@ function register(mainWindow, cookiePath) {
     const { shell } = require('electron');
     shell.openPath(folderPath);
   });
+
+  ipcMain.handle('open-file', async (_e, { filePath, hash }) => {
+    if (!fs.existsSync(filePath)) {
+      return 'File not found — it may have been moved or deleted.';
+    }
+    if (hash) {
+      const current = partialHash(filePath);
+      if (current !== hash) {
+        return 'File has changed since download — it may have been replaced.';
+      }
+    }
+    const { shell } = require('electron');
+    return shell.openPath(filePath);
+  });
 }
 
 // retries rmSync up to 5x at 300ms — windows releases handles async after taskkill
@@ -261,6 +294,7 @@ function deleteTmpWithRetry(tmpDir, downloadId, attempt) {
 }
 
 function moveFromTmp(tmpDir, outDir, downloadId) {
+  const moved = [];
   try {
     const files = fs.readdirSync(tmpDir);
     for (const f of files) {
@@ -268,7 +302,9 @@ function moveFromTmp(tmpDir, outDir, downloadId) {
       const dest = path.join(outDir, f);
       try {
         fs.renameSync(src, dest);
-        writeLog(`Moved to output [${downloadId}]: ${f}`);
+        const hash = partialHash(dest);
+        writeLog(`Moved to output [${downloadId}]: ${f} (hash: ${hash?.slice(0, 8)}…)`);
+        moved.push({ path: dest, hash });
       } catch (e) {
         writeLog(`Move failed [${downloadId}]: ${f} — ${e.message}`);
       }
@@ -277,6 +313,7 @@ function moveFromTmp(tmpDir, outDir, downloadId) {
   } catch (e) {
     writeLog(`moveFromTmp error [${downloadId}]: ${e.message}`);
   }
+  return moved;
 }
 
 function buildAudioFormatPart(quality, preferOpus = false) {

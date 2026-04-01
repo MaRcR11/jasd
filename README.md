@@ -1,6 +1,19 @@
-# JASD
+<p align="center">
+  <svg width="80" height="80" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#5b7cf6"/>
+        <stop offset="100%" stop-color="#7c5cf6"/>
+      </linearGradient>
+    </defs>
+    <rect width="32" height="32" rx="7" fill="url(#g)"/>
+    <path d="M10 8l14 8-14 8V8z" fill="white"/>
+  </svg>
+</p>
 
-JASD is just a simple downloader, a fast and clean desktop app for downloading videos from YouTube and hundreds of other sites.
+# JASD — Just A Simple Downloader
+
+A fast, clean desktop app for downloading videos from YouTube and hundreds of other sites.
 
 https://github.com/user-attachments/assets/ee5b6517-b436-40d7-adb2-4cb2bc11f0ee
 

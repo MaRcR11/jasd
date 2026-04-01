@@ -1,6 +1,8 @@
 'use strict';
 const { ipcMain } = require('electron');
 const { readJSON, writeJSON } = require('../utils/storage');
+const path = require('path');
+const os = require('os');
 
 function register(settingsPath, queuePath) {
   ipcMain.handle('load-settings', () => readJSON(settingsPath, {}));
@@ -9,6 +11,8 @@ function register(settingsPath, queuePath) {
     writeJSON(settingsPath, { ...cur, ...data });
     return true;
   });
+
+  ipcMain.handle('get-downloads-dir', () => path.join(os.homedir(), 'Downloads'));
 
   ipcMain.handle('load-queue', () => readJSON(queuePath, []));
   ipcMain.handle('save-queue', (_e, data) => {

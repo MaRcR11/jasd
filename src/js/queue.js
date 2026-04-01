@@ -65,10 +65,10 @@ export function onProgress(data) {
 }
 
 export function onComplete(data) {
-  const { downloadId, outputDir } = data;
+  const { downloadId, outputDir, outputFile, outputFileHash } = data;
   S.activeDownloadIds.delete(downloadId);
   const ts = new Date().toISOString();
-  patchQueue(downloadId, { status: 'done', percent: 100, outputDir, completedAt: ts });
+  patchQueue(downloadId, { status: 'done', percent: 100, outputDir, outputFile, outputFileHash, completedAt: ts });
   persistQueue();
   updateBadge();
   processNextInQueue();
@@ -160,18 +160,33 @@ export function buildQueueEl(item) {
   el.id = `qi-${item.id}`;
   el.innerHTML = `
     <img class="qi-thumb" src="${escHtml(item.thumb || '')}" alt=""/>
-    <div class="qi-info">
+    <div class="qi-body">
       <div class="qi-title">${escHtml(item.title)}</div>
-      <div class="qi-pw"><div class="qi-p" style="width:0%"></div></div>
+      <div class="qi-row">
+        <div class="qi-pw"><div class="qi-p" style="width:0%"></div></div>
+        <span class="qi-badge">…</span>
+        <div class="qi-btns">
+          <button class="qi-cancel" style="display:none" title="Cancel download">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/>
+            </svg>
+          </button>
+          <button class="qi-retry" style="display:none" title="Retry download">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 8a6 6 0 1 0 1-3.3"/>
+              <polyline points="2,2 2,5 5,5"/>
+            </svg>
+          </button>
+          <button class="qi-play" style="display:none" title="Play file">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <polygon points="4,2 13,8 4,14"/>
+            </svg>
+          </button>
+          <button class="qi-action" style="display:none">Open</button>
+        </div>
+      </div>
       <div class="qi-status"></div>
     </div>
-    <span class="qi-badge">…</span>
-    <button class="qi-cancel" style="display:none" title="Cancel download">
-      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/>
-      </svg>
-    </button>
-    <button class="qi-action" style="display:none">Open</button>
   `;
   return el;
 }
@@ -183,6 +198,8 @@ export function updateQueueEl(el, item) {
   const stat = el.querySelector('.qi-status');
   const act = el.querySelector('.qi-action');
   const cancelBtn = el.querySelector('.qi-cancel');
+  const retryBtn = el.querySelector('.qi-retry');
+  const playBtn = el.querySelector('.qi-play');
 
   const STATUS_MAP = {
     queued: { label: 'Queued', cls: 'queued', color: 'var(--text3)' },
@@ -229,6 +246,30 @@ export function updateQueueEl(el, item) {
     }
   }
 
+  if (playBtn) {
+    if (item.status === 'done' && item.outputFile) {
+      playBtn.style.display = '';
+      playBtn.onclick = async () => {
+        const err = await window.api.openFile(item.outputFile, item.outputFileHash);
+        if (err) {
+          const stat = el.querySelector('.qi-status');
+          if (stat) {
+            stat.textContent = 'File not found — it may have been moved or deleted.';
+            stat.style.color = 'var(--danger)';
+            setTimeout(() => {
+              stat.style.color = '';
+              stat.textContent = item.completedAt ? formatTs(item.completedAt) : '';
+            }, 4000);
+          }
+          window.api.onLog && console.warn(`[play] openFile failed: ${err}`);
+        }
+      };
+    } else {
+      playBtn.style.display = 'none';
+      playBtn.onclick = null;
+    }
+  }
+
   if (item.status === 'done' && item.outputDir) {
     act.style.display = '';
     act.textContent = 'Open';
@@ -239,6 +280,31 @@ export function updateQueueEl(el, item) {
     act.onclick = () => removeFromQueue(item.id);
   } else {
     act.style.display = 'none';
+  }
+
+  if (retryBtn) {
+    if ((item.status === 'error' || item.status === 'cancelled') && item.opts) {
+      retryBtn.style.display = '';
+      retryBtn.onclick = () => {
+        const oldId = item.id;
+        const newId = Date.now().toString(36) + Math.random().toString(36).slice(2);
+        S.cancelledIds.delete(oldId);
+        item.id = newId;
+        item.opts = { ...item.opts, downloadId: newId };
+        item.status = 'queued';
+        item.percent = 0;
+        item.speed = null;
+        item.eta = null;
+        const el = document.getElementById(`qi-${oldId}`);
+        if (el) el.id = `qi-${newId}`;
+        updateQueueEl(el, item);
+        persistQueue();
+        processNextInQueue();
+      };
+    } else {
+      retryBtn.style.display = 'none';
+      retryBtn.onclick = null;
+    }
   }
 }
 

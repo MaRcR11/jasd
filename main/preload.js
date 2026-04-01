@@ -10,14 +10,17 @@ contextBridge.exposeInMainWorld('api', {
 
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   checkTools: () => ipcRenderer.invoke('check-tools'),
+  checkForUpdate: () => ipcRenderer.invoke('check-for-update'),
   fetchInfo: (url) => ipcRenderer.invoke('fetch-info', url),
   pickFolder: () => ipcRenderer.invoke('pick-folder'),
   startDownload: (opts) => ipcRenderer.invoke('start-download', opts),
   cancelDownload: (id) => ipcRenderer.send('cancel-download', id),
   openFolder: (p) => ipcRenderer.send('open-folder', p),
+  openFile: (filePath, hash) => ipcRenderer.invoke('open-file', { filePath, hash }),
 
   loadSettings: () => ipcRenderer.invoke('load-settings'),
   saveSettings: (d) => ipcRenderer.invoke('save-settings', d),
+  getDownloadsDir: () => ipcRenderer.invoke('get-downloads-dir'),
   loadQueue: () => ipcRenderer.invoke('load-queue'),
   saveQueue: (d) => ipcRenderer.invoke('save-queue', d),
 
@@ -36,6 +39,14 @@ contextBridge.exposeInMainWorld('api', {
 
   isMaximized: () => ipcRenderer.invoke('is-maximized'),
   onWindowState: (cb) => ipcRenderer.on('window-state', (_e, s) => cb(s)),
+
+  downloadAndInstallUpdate: (downloadUrl) => ipcRenderer.invoke('download-and-install-update', { downloadUrl }),
+  cancelUpdateDownload: () => ipcRenderer.invoke('cancel-update-download'),
+  onInstallProgress: (cb) => {
+    const handler = (_e, pct) => cb(pct);
+    ipcRenderer.on('install-progress', handler);
+    return () => ipcRenderer.removeListener('install-progress', handler);
+  },
 
   onProgress: (cb) => ipcRenderer.on('download-progress', (_e, d) => cb(d)),
   onComplete: (cb) => ipcRenderer.on('download-complete', (_e, d) => cb(d)),

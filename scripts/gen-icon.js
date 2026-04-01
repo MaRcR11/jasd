@@ -2,7 +2,13 @@ const path = require('path');
 const fs   = require('fs');
 
 const svgSrc = `<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="256" height="256" rx="56" fill="#5b7cf6"/>
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5b7cf6"/>
+      <stop offset="100%" stop-color="#7c5cf6"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#g)"/>
   <path d="M80 64L208 128L80 192V64Z" fill="white"/>
 </svg>`;
 
