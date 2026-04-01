@@ -44,7 +44,13 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm ci --ignore-scripts
+      - run: npm install --ignore-scripts
+
+      - name: Sync version from tag
+        shell: bash
+        run: |
+          ver="${GITHUB_REF_NAME#v}"
+          node -e "const fs=require('fs'),p=JSON.parse(fs.readFileSync('package.json','utf8'));p.version='$ver';fs.writeFileSync('package.json',JSON.stringify(p,null,2)+'\n');"
 
       - name: Download yt-dlp (Windows)
         if: matrix.os == 'windows-latest'
