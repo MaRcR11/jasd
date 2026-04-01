@@ -7,6 +7,7 @@ https://github.com/user-attachments/assets/ee5b6517-b436-40d7-adb2-4cb2bc11f0ee
 - **Video + Audio** or **audio only** download
 - **Download queue** management
 - **15 languages** with auto-detection
+- **Auto-updates** — checks for new releases on startup and installs silently
 
 ---
 
@@ -14,10 +15,8 @@ https://github.com/user-attachments/assets/ee5b6517-b436-40d7-adb2-4cb2bc11f0ee
 
 ### 1. Install dependencies
 
-- **yt-dlp** — [github.com/yt-dlp/yt-dlp](https://github.com/yt-dlp/yt-dlp)
-- **ffmpeg** — [ffmpeg.org](https://ffmpeg.org/download.html)
-
-Both must be available on your system PATH.
+- **yt-dlp** — bundled in releases; for dev builds, place the binary in `bin/` or have it on your system PATH — [github.com/yt-dlp/yt-dlp](https://github.com/yt-dlp/yt-dlp)
+- **ffmpeg** — must be available on your system PATH — [ffmpeg.org](https://ffmpeg.org/download.html)
 
 ### 2. Install & Run
 
