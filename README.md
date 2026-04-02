@@ -4,6 +4,7 @@
 
 https://github.com/user-attachments/assets/5c1850ed-82ea-469e-8da7-43b389c09b85
 
+## Features
 - **Video + Audio** or **audio only** download
 - **Download queue**
 - **30 languages** with auto-detection
