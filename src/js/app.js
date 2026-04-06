@@ -10,7 +10,12 @@ import {
   setMode,
   wireDownloadEvents,
 } from './services/download.js';
-import { applySettings, checkTools, setupSettingsListeners } from './services/settings.js';
+import {
+  applySettings,
+  checkTools,
+  setupSettingsListeners,
+  checkForUpdate,
+} from './services/settings.js';
 
 (async () => {
   [S.settings, S.queue] = await Promise.all([
