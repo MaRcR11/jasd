@@ -78,6 +78,7 @@ export async function deleteCookies() {
 }
 
 let _updateChecking = false;
+let _lastUpdateResult = null; // cached so we can re-translate on lang change
 
 function _lockBtnWidth(btn) {
   if (!btn || btn.style.minWidth) return;
@@ -125,6 +126,7 @@ export async function checkForUpdate(showIfNone = false) {
 
   if (checkBtn) checkBtn.classList.remove('checking');
   _updateChecking = false;
+  _lastUpdateResult = { result, showIfNone };
 
   if (!statusEl) return;
 
@@ -161,6 +163,32 @@ export async function checkForUpdate(showIfNone = false) {
     }
     if (badge) badge.style.display = 'none';
     if (installBtn) installBtn.style.display = 'none';
+  }
+}
+
+function _retranslateUpdateStatus() {
+  if (!_lastUpdateResult) return;
+  const { result, showIfNone } = _lastUpdateResult;
+  const statusEl = document.getElementById('updateStatusText');
+  const installBtn = document.getElementById('btnInstallUpdate');
+  if (!statusEl) return;
+
+  if (result.error) {
+    if (showIfNone) {
+      statusEl.textContent = t('update_check_failed') + ': ' + result.error;
+    }
+    return;
+  }
+
+  if (result.hasUpdate) {
+    statusEl.textContent = t('update_available').replace('{v}', result.latest);
+    if (installBtn && installBtn.style.display !== 'none') {
+      installBtn.textContent = result.downloadUrl
+        ? t('btn_install_update') + ' v' + result.latest
+        : t('btn_view_update') + ' v' + result.latest;
+    }
+  } else if (showIfNone) {
+    statusEl.textContent = t('update_up_to_date');
   }
 }
 
@@ -238,6 +266,7 @@ export function setupSettingsListeners() {
     await saveSetting('lang', S.lang);
     const { applyLang } = await import('../lib/i18n.js');
     applyLang();
+    _retranslateUpdateStatus();
   });
 
   document.getElementById('settTheme').addEventListener('change', async (e) => {
