@@ -78,7 +78,7 @@ export async function deleteCookies() {
 }
 
 let _updateChecking = false;
-let _lastUpdateResult = null; // cached so we can re-translate on lang change
+let _lastUpdateResult = null;
 
 function _lockBtnWidth(btn) {
   if (!btn || btn.style.minWidth) return;
