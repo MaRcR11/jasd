@@ -2,7 +2,13 @@
 import { applyLang, detectSystemLang } from './lib/i18n.js';
 import { applyTheme } from './lib/themes.js';
 import { setView } from './components/ui.js';
-import { renderQueue, updateBadge, updateEmptyState, patchQueue } from './services/queue.js';
+import {
+  renderQueue,
+  updateBadge,
+  updateEmptyState,
+  patchQueue,
+  persistQueue,
+} from './services/queue.js';
 import {
   fetchInfo,
   startDownload,
@@ -128,7 +134,7 @@ function setupListeners() {
       if (!S.queue.find((q) => q.id === id)) el.remove();
     });
     updateEmptyState();
-    import('./queue.js').then((m) => m.persistQueue());
+    persistQueue();
     updateBadge();
   });
 }
