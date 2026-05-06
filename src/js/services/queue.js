@@ -193,21 +193,28 @@ export function cancelActive() {
   cancelSpecific(targetId);
 }
 
+let _persistPending = false;
+let _persistQueued = null;
+
 export async function persistQueue() {
-  const toSave = S.queue.map((q) => {
+  _persistQueued = S.queue.map((q) => {
     const copy = { ...q };
     delete copy.opts;
-    if (copy.status === 'downloading') {
-      copy.status = 'cancelled';
-      copy.percent = 0;
-    }
-    if (copy.status === 'queued') {
+    if (copy.status === 'downloading' || copy.status === 'queued') {
       copy.status = 'cancelled';
       copy.percent = 0;
     }
     return copy;
   });
-  await window.api.saveQueue(toSave);
+
+  if (_persistPending) return;
+  _persistPending = true;
+  while (_persistQueued) {
+    const toSave = _persistQueued;
+    _persistQueued = null;
+    await window.api.saveQueue(toSave);
+  }
+  _persistPending = false;
 }
 
 export function renderQueue() {
