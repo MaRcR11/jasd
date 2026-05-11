@@ -56,9 +56,8 @@ const run = (cmd) => execSync(cmd, { stdio: 'inherit' });
 
 run(`npm version ${newVersion} --no-git-tag-version`);
 run('git add package.json package-lock.json');
-run(`git commit -m "chore: release ${tag}"`);
+run(`git commit -m "chore(release): ${tag}"`);
 run(`git tag ${tag}`);
 run('git push --follow-tags');
 
 console.log(`\nDone — ${tag} has been pushed.`);
-console.log('CI will now: run tests → build (win/mac/linux) → publish GitHub Release.');
