@@ -82,4 +82,4 @@ async function getFfmpegVersion() {
   });
 }
 
-module.exports = { getYtDlpPath, getYtDlpVersion, getFfmpegVersion };
+module.exports = { getYtDlpPath, getYtDlpVersion, getFfmpegVersion, _parseVer, _isNewer };
