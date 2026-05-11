@@ -1,6 +1,10 @@
 'use strict';
-const { execSync } = require('child_process');
+const { exec } = require('child_process');
 const path = require('path');
+
+const VERSION_TIMEOUT = 2000;
+
+let _cachedPath = undefined;
 
 function _bundledBinDir() {
   try {
@@ -12,13 +16,12 @@ function _bundledBinDir() {
   }
 }
 
-function _tryExec(bin) {
-  try {
-    execSync(`"${bin}" --version`, { stdio: 'ignore' });
-    return true;
-  } catch {
-    return false;
-  }
+function _probeVersion(bin) {
+  return new Promise((resolve) => {
+    exec(`"${bin}" --version`, { timeout: VERSION_TIMEOUT }, (err, stdout) => {
+      resolve(err ? null : stdout.trim());
+    });
+  });
 }
 
 function _parseVer(ver) {
@@ -36,44 +39,47 @@ function _isNewer(verA, verB) {
   return false;
 }
 
-function getYtDlpPath() {
+async function _resolvePath() {
   const binDir = _bundledBinDir();
   const bundledBin = binDir
     ? path.join(binDir, process.platform === 'win32' ? 'yt-dlp.exe' : 'yt-dlp')
     : null;
   const systemCandidates = process.platform === 'win32' ? ['yt-dlp', 'yt-dlp.exe'] : ['yt-dlp'];
+  const allCandidates = [...(bundledBin ? [bundledBin] : []), ...systemCandidates];
 
-  const bundled = bundledBin && _tryExec(bundledBin) ? bundledBin : null;
-  const system = systemCandidates.find(_tryExec) || null;
+  const versions = await Promise.all(allCandidates.map(_probeVersion));
 
-  if (!bundled && !system) return null;
-  if (!bundled) return system;
-  if (!system) return bundled;
+  const bundledVer = bundledBin ? versions[0] : null;
+  const systemEntries = systemCandidates
+    .map((c, i) => ({ bin: c, ver: versions[(bundledBin ? 1 : 0) + i] }))
+    .filter((e) => e.ver !== null);
+  const systemEntry = systemEntries[0] || null;
 
-  const bundledVer = getYtDlpVersion(bundled);
-  const systemVer = getYtDlpVersion(system);
-  return _isNewer(systemVer, bundledVer) ? system : bundled;
+  if (!bundledVer && !systemEntry) return null;
+  if (!bundledVer) return systemEntry.bin;
+  if (!systemEntry) return bundledBin;
+
+  return _isNewer(systemEntry.ver, bundledVer) ? systemEntry.bin : bundledBin;
 }
 
-function getYtDlpVersion(ytdlpPath) {
-  try {
-    return execSync(`"${ytdlpPath}" --version`, { timeout: 5000 }).toString().trim();
-  } catch {
-    return null;
-  }
+async function getYtDlpPath() {
+  if (_cachedPath !== undefined) return _cachedPath;
+  _cachedPath = await _resolvePath();
+  return _cachedPath;
 }
 
-function getFfmpegVersion() {
-  try {
-    const out = execSync('ffmpeg -version', {
-      stdio: ['ignore', 'pipe', 'ignore'],
-      timeout: 5000,
-    }).toString();
-    const m = out.match(/ffmpeg version ([^\s]+)/);
-    return m ? m[1] : 'found';
-  } catch {
-    return null;
-  }
+async function getYtDlpVersion(ytdlpPath) {
+  return _probeVersion(ytdlpPath);
+}
+
+async function getFfmpegVersion() {
+  return new Promise((resolve) => {
+    exec('ffmpeg -version', { timeout: VERSION_TIMEOUT }, (err, stdout) => {
+      if (err) return resolve(null);
+      const m = stdout.match(/ffmpeg version ([^\s]+)/);
+      resolve(m ? m[1] : 'found');
+    });
+  });
 }
 
 module.exports = { getYtDlpPath, getYtDlpVersion, getFfmpegVersion };

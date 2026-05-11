@@ -27,9 +27,8 @@ function register(cookiePath, logPath) {
   });
 
   ipcMain.handle('check-tools', async () => {
-    const ytdlpPath = getYtDlpPath();
-    const ytdlpVersion = ytdlpPath ? getYtDlpVersion(ytdlpPath) : null;
-    const ffmpegVersion = getFfmpegVersion();
+    const [ytdlpPath, ffmpegVersion] = await Promise.all([getYtDlpPath(), getFfmpegVersion()]);
+    const ytdlpVersion = ytdlpPath ? await getYtDlpVersion(ytdlpPath) : null;
     const hasCookies = fs.existsSync(cookiePath);
     let cookieSize = null;
     if (hasCookies) {
