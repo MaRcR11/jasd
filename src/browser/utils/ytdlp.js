@@ -12,19 +12,47 @@ function _bundledBinDir() {
   }
 }
 
+function _tryExec(bin) {
+  try {
+    execSync(`"${bin}" --version`, { stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function _parseVer(ver) {
+  return (ver || '').split('.').map(Number);
+}
+
+function _isNewer(verA, verB) {
+  const a = _parseVer(verA);
+  const b = _parseVer(verB);
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    const diff = (a[i] || 0) - (b[i] || 0);
+    if (diff > 0) return true;
+    if (diff < 0) return false;
+  }
+  return false;
+}
+
 function getYtDlpPath() {
   const binDir = _bundledBinDir();
-  const bundled = binDir
-    ? [path.join(binDir, process.platform === 'win32' ? 'yt-dlp.exe' : 'yt-dlp')]
-    : [];
-  const system = process.platform === 'win32' ? ['yt-dlp', 'yt-dlp.exe'] : ['yt-dlp'];
-  for (const c of [...bundled, ...system]) {
-    try {
-      execSync(`"${c}" --version`, { stdio: 'ignore' });
-      return c;
-    } catch {}
-  }
-  return null;
+  const bundledBin = binDir
+    ? path.join(binDir, process.platform === 'win32' ? 'yt-dlp.exe' : 'yt-dlp')
+    : null;
+  const systemCandidates = process.platform === 'win32' ? ['yt-dlp', 'yt-dlp.exe'] : ['yt-dlp'];
+
+  const bundled = bundledBin && _tryExec(bundledBin) ? bundledBin : null;
+  const system = systemCandidates.find(_tryExec) || null;
+
+  if (!bundled && !system) return null;
+  if (!bundled) return system;
+  if (!system) return bundled;
+
+  const bundledVer = getYtDlpVersion(bundled);
+  const systemVer = getYtDlpVersion(system);
+  return _isNewer(systemVer, bundledVer) ? system : bundled;
 }
 
 function getYtDlpVersion(ytdlpPath) {
