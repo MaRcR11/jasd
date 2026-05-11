@@ -36,6 +36,43 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm test
 
+  auto-tag:
+    name: Auto-tag on version bump
+    if: github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+      - name: Detect version bump and push tag
+        run: |
+          git show HEAD~1:package.json > /tmp/prev-pkg.json 2>/dev/null || echo '{"version":"0.0.0"}' > /tmp/prev-pkg.json
+          prev=$(node -e "console.log(require('/tmp/prev-pkg.json').version)")
+          curr=$(node -e "console.log(require('./package.json').version)")
+          echo "Previous: $prev  →  Current: $curr"
+
+          # Exit 0 (bump detected) only if curr is strictly greater than prev
+          node -e "
+            const [p,c] = ['$prev','$curr'].map(v=>v.split('.').map(Number));
+            for(let i=0;i<3;i++){if(c[i]>p[i])process.exit(0);if(c[i]<p[i])process.exit(1);}
+            process.exit(1);
+          " || { echo "No version bump — skipping tag."; exit 0; }
+
+          tag="v$curr"
+          if git ls-remote --tags origin "$tag" | grep -q "refs/tags/$tag"; then
+            echo "Tag $tag already exists — skipping."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "$tag"
+          git push origin "$tag"
+          echo "Pushed $tag — build pipeline will now start."
+
   build:
     name: Build (${{ matrix.os }})
     needs: test
