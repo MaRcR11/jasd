@@ -12,6 +12,8 @@
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux",
+    "test": "vitest run",
+    "release": "node scripts/release.js",
     "format": "prettier --write \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\"",
     "format:check": "prettier --check \"src/**/*.js\" \"src/**/*.css\" \"src/**/*.html\""
   },
@@ -19,7 +21,8 @@
     "electron": "^29.0.0",
     "electron-builder": "^24.13.3",
     "prettier": "^3.8.1",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "vitest": "^2.0.0"
   },
   "build": {
     "appId": "com.jasd.downloader",

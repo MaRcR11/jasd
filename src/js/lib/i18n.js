@@ -87,7 +87,8 @@ export function applyLang() {
 }
 
 export function detectSystemLang() {
-  const raw = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+  const nav = (typeof navigator !== 'undefined' && navigator) || {};
+  const raw = (nav.language || nav.userLanguage || 'en').toLowerCase();
   const full = raw.replace('_', '-');
   const normalized = Object.keys(I18N).find((k) => k.toLowerCase() === full);
   if (normalized) return normalized;
