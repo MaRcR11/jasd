@@ -46,27 +46,27 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 2
+          fetch-depth: 0
       - name: Detect version bump and push tag
         run: |
-          git show HEAD~1:package.json > /tmp/prev-pkg.json 2>/dev/null || echo '{"version":"0.0.0"}' > /tmp/prev-pkg.json
-          prev=$(node -e "console.log(require('/tmp/prev-pkg.json').version)")
           curr=$(node -e "console.log(require('./package.json').version)")
-          echo "Previous: $prev  →  Current: $curr"
+          latest_tag=$(git tag -l "v*" --sort=-version:refname | head -1)
+          prev=${latest_tag#v}
+          prev=${prev:-"0.0.0"}
+          echo "Latest released tag: ${latest_tag:-none}  —  package.json: $curr"
 
-          # Exit 0 (bump detected) only if curr is strictly greater than prev
-          node -e "
+          is_newer=$(node -e "
             const [p,c] = ['$prev','$curr'].map(v=>v.split('.').map(Number));
-            for(let i=0;i<3;i++){if(c[i]>p[i])process.exit(0);if(c[i]<p[i])process.exit(1);}
-            process.exit(1);
-          " || { echo "No version bump — skipping tag."; exit 0; }
+            for(let i=0;i<3;i++){if(c[i]>p[i]){process.stdout.write('yes');process.exit();}if(c[i]<p[i])break;}
+            process.stdout.write('no');
+          ")
 
-          tag="v$curr"
-          if git ls-remote --tags origin "$tag" | grep -q "refs/tags/$tag"; then
-            echo "Tag $tag already exists — skipping."
+          if [ "\$is_newer" != "yes" ]; then
+            echo "No version bump ($prev → $curr is not newer) — skipping."
             exit 0
           fi
 
+          tag="v$curr"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag "$tag"
