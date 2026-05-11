@@ -63,7 +63,7 @@ jobs:
         shell: bash
         run: |
           ver="${GITHUB_REF_NAME#v}"
-          npm version "$ver" --no-git-tag-version
+          node -e "const fs=require('fs'),p=JSON.parse(fs.readFileSync('package.json','utf8'));p.version='$ver';fs.writeFileSync('package.json',JSON.stringify(p,null,2)+'\n');"
 
       - name: Download yt-dlp (Windows)
         if: matrix.os == 'windows-latest'
