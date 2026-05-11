@@ -52,12 +52,10 @@ try {
 
 console.log(`Bumping ${pkg.version} → ${newVersion}`);
 
-pkg.version = newVersion;
-fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
-
 const run = (cmd) => execSync(cmd, { stdio: 'inherit' });
 
-run('git add package.json');
+run(`npm version ${newVersion} --no-git-tag-version`);
+run('git add package.json package-lock.json');
 run(`git commit -m "chore: release ${tag}"`);
 run(`git tag ${tag}`);
 run('git push --follow-tags');
