@@ -29,7 +29,7 @@ const cancelledIds = new Set();
 
 function register(mainWindow, cookiePath) {
   ipcMain.handle('fetch-info', async (_e, url) => {
-    const ytdlp = getYtDlpPath();
+    const ytdlp = await getYtDlpPath();
     if (!ytdlp) return { error: 'yt-dlp not found. Install it and place it in the bin/ folder.' };
     writeLog(`Fetching info: ${url}`);
 
@@ -124,7 +124,7 @@ function register(mainWindow, cookiePath) {
   });
 
   ipcMain.handle('start-download', async (_e, opts) => {
-    const ytdlp = getYtDlpPath();
+    const ytdlp = await getYtDlpPath();
     if (!ytdlp) return { error: 'yt-dlp not found — place it in the bin/ folder.' };
 
     const {
