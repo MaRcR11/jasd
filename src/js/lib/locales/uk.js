@@ -35,6 +35,7 @@
   label_log_file: 'Файл журналу',
   label_always_overwrite: 'Завжди перезаписувати',
   label_prefer_opus: 'Надавати перевагу Opus',
+  label_cache_bin_path: 'Кешувати шлях yt-dlp при запуску',
   label_max_concurrent: 'Паралельні завантаження',
   label_custom_colors: 'Власні кольори',
   mode_video: 'Відео + Аудіо',

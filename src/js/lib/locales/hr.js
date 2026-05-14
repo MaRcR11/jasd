@@ -35,6 +35,7 @@
   label_log_file: 'Datoteka dnevnika',
   label_always_overwrite: 'Uvijek prepiši',
   label_prefer_opus: 'Preferiraj Opus zvuk',
+  label_cache_bin_path: 'Spremi put do yt-dlp pri pokretanju',
   label_max_concurrent: 'Paralelna preuzimanja',
   label_custom_colors: 'Prilagođene boje',
   mode_video: 'Video + Zvuk',

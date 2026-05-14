@@ -35,6 +35,7 @@
   label_log_file: 'Log-fil',
   label_always_overwrite: 'Overskrive altid',
   label_prefer_opus: 'Foretrækk Opus-lyd',
+  label_cache_bin_path: 'Gem yt-dlp-sti ved opstart',
   label_max_concurrent: 'Parallelle downloads',
   label_custom_colors: 'Tilpassede farver',
   mode_video: 'Video + Lyd',

@@ -35,6 +35,7 @@
   label_log_file: '로그 파일',
   label_always_overwrite: '항상 덮어쓰기',
   label_prefer_opus: 'Opus 오디오 우선',
+  label_cache_bin_path: '시작 시 yt-dlp 경로 캐시',
   label_max_concurrent: '병렬 다운로드',
   label_custom_colors: '사용자 지정 색상',
   mode_video: '비디오 + 오디오',

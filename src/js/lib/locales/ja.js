@@ -35,6 +35,7 @@
   label_log_file: 'ログファイル',
   label_always_overwrite: '常に上書き',
   label_prefer_opus: 'Opus オーディオを優先',
+  label_cache_bin_path: '起動時に yt-dlp のパスをキャッシュする',
   label_max_concurrent: '並列ダウンロード',
   label_custom_colors: 'カスタムカラー',
   mode_video: '動画 + 音声',

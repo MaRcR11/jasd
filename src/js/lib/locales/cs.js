@@ -35,6 +35,7 @@
   label_log_file: 'Soubor protokolu',
   label_always_overwrite: 'Vždy přepsat',
   label_prefer_opus: 'Preferovat Opus',
+  label_cache_bin_path: 'Uložit cestu yt-dlp při spuštění do mezipaměti',
   label_max_concurrent: 'Souběžné stahování',
   label_custom_colors: 'Vlastní barvy',
   mode_video: 'Video + Zvuk',

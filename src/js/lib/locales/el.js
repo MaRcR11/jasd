@@ -35,6 +35,7 @@
   label_log_file: 'Αρχείο καταγραφής',
   label_always_overwrite: 'Πάντα αντικατάσταση',
   label_prefer_opus: 'Προτίμηση Opus ήχου',
+  label_cache_bin_path: 'Αποθήκευση διαδρομής yt-dlp στην εκκίνηση',
   label_max_concurrent: 'Παράλληλες λήψεις',
   label_custom_colors: 'Προσαρμοσμένα χρώματα',
   mode_video: 'Βίντεο + Ήχος',

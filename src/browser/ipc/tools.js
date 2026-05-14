@@ -4,13 +4,27 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const { writeLog } = require('../utils/logger');
-const { getYtDlpPath, getYtDlpVersion, getFfmpegVersion } = require('../utils/ytdlp');
+const {
+  getYtDlpPath,
+  getYtDlpVersion,
+  getFfmpegVersion,
+  setCacheBinPath,
+} = require('../utils/ytdlp');
 
 let _activeDownloadRes = null;
 let _activeDownloadFile = null;
 let _downloadCancelled = false;
 
-function register(cookiePath, logPath) {
+function register(cookiePath, logPath, settingsPath) {
+  const { readJSON } = require('../utils/storage');
+  const saved = readJSON(settingsPath, {});
+  setCacheBinPath(!!saved.cacheBinPath);
+
+  ipcMain.handle('set-cache-bin-path', (_e, enabled) => {
+    setCacheBinPath(enabled);
+    return true;
+  });
+
   ipcMain.handle('get-log-path', () => logPath);
   ipcMain.on('open-log', () => shell.openPath(logPath));
   ipcMain.handle('get-log-content', () => {
