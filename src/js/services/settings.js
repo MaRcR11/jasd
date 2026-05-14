@@ -13,6 +13,8 @@ export function applySettings() {
   if (chkUpdEl) chkUpdEl.checked = S.settings.checkForUpdates !== false;
   const chkOpus = document.getElementById('chkPreferOpus');
   if (chkOpus) chkOpus.checked = !!S.settings.preferOpus;
+  const chkCache = document.getElementById('chkCacheBinPath');
+  if (chkCache) chkCache.checked = !!S.settings.cacheBinPath;
   const themeEl = document.getElementById('settTheme');
   if (themeEl && S.settings.theme) themeEl.value = S.settings.theme;
   const mcEl = document.getElementById('settMaxConcurrent');
@@ -288,6 +290,14 @@ export function setupSettingsListeners() {
   if (chkOpus) {
     chkOpus.addEventListener('change', async (e) => {
       await saveSetting('preferOpus', e.target.checked);
+    });
+  }
+
+  const chkCache = document.getElementById('chkCacheBinPath');
+  if (chkCache) {
+    chkCache.addEventListener('change', async (e) => {
+      await saveSetting('cacheBinPath', e.target.checked);
+      await window.api.setCacheBinPath(e.target.checked);
     });
   }
 

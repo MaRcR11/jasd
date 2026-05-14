@@ -35,6 +35,7 @@
   label_log_file: 'Lokitiedosto',
   label_always_overwrite: 'Korvaa aina',
   label_prefer_opus: 'Suosi Opus-ääntä',
+  label_cache_bin_path: 'Tallenna yt-dlp-polku välimuistiin käynnistyksessä',
   label_max_concurrent: 'Rinnakkaiset lataukset',
   label_custom_colors: 'Mukautetut värit',
   mode_video: 'Video + Ääni',

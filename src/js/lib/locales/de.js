@@ -35,6 +35,7 @@
   label_log_file: 'Protokolldatei',
   label_always_overwrite: 'Immer überschreiben',
   label_prefer_opus: 'Opus-Audio bevorzugen',
+  label_cache_bin_path: 'yt-dlp-Pfad beim Start zwischenspeichern',
   label_max_concurrent: 'Parallele Downloads',
   label_custom_colors: 'Eigene Farben',
   mode_video: 'Video + Audio',

@@ -35,6 +35,7 @@
   label_log_file: 'Arquivo de log',
   label_always_overwrite: 'Sempre sobrescrever',
   label_prefer_opus: 'Preferir áudio Opus',
+  label_cache_bin_path: 'Guardar caminho do yt-dlp no arranque',
   label_max_concurrent: 'Downloads paralelos',
   label_custom_colors: 'Cores personalizadas',
   mode_video: 'Vídeo + Áudio',

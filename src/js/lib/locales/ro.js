@@ -35,6 +35,7 @@
   label_log_file: 'Fișier jurnal',
   label_always_overwrite: 'Suprascrie întotdeauna',
   label_prefer_opus: 'Preferă audio Opus',
+  label_cache_bin_path: 'Memorează calea yt-dlp la pornire',
   label_max_concurrent: 'Descărcări paralele',
   label_custom_colors: 'Culori personalizate',
   mode_video: 'Video + Audio',

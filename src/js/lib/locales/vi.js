@@ -35,6 +35,7 @@
   label_log_file: 'Tệp nhật ký',
   label_always_overwrite: 'Luôn ghi đè',
   label_prefer_opus: 'Ưu tiên âm thanh Opus',
+  label_cache_bin_path: 'Lưu đường dẫn yt-dlp khi khởi động',
   label_max_concurrent: 'Tải xuống song song',
   label_custom_colors: 'Màu tùy chỉnh',
   mode_video: 'Video + Âm thanh',

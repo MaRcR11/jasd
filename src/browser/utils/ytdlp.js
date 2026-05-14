@@ -1,10 +1,17 @@
 'use strict';
 const { exec } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
-const VERSION_TIMEOUT = 2000;
+const VERSION_TIMEOUT = 5000;
 
+let _cacheBinPath = false;
 let _cachedPath = undefined;
+
+function setCacheBinPath(enabled) {
+  _cacheBinPath = !!enabled;
+  if (!enabled) _cachedPath = undefined;
+}
 
 function _bundledBinDir() {
   try {
@@ -39,33 +46,45 @@ function _isNewer(verA, verB) {
   return false;
 }
 
+function _findSystemBin() {
+  return new Promise((resolve) => {
+    const cmd = process.platform === 'win32' ? 'where yt-dlp' : 'which yt-dlp';
+    exec(cmd, { timeout: 3000 }, (err, stdout) => {
+      if (err) return resolve(null);
+      const lines = stdout.trim().split(/\r?\n/);
+      const found = lines.find((l) => l.toLowerCase().endsWith('.exe')) || lines[0];
+      resolve(found ? found.trim() : null);
+    });
+  });
+}
+
 async function _resolvePath() {
   const binDir = _bundledBinDir();
   const bundledBin = binDir
     ? path.join(binDir, process.platform === 'win32' ? 'yt-dlp.exe' : 'yt-dlp')
     : null;
-  const systemCandidates = process.platform === 'win32' ? ['yt-dlp', 'yt-dlp.exe'] : ['yt-dlp'];
-  const allCandidates = [...(bundledBin ? [bundledBin] : []), ...systemCandidates];
 
-  const versions = await Promise.all(allCandidates.map(_probeVersion));
+  const bundledExists = bundledBin ? fs.existsSync(bundledBin) : false;
+  const systemBin = await _findSystemBin();
 
-  const bundledVer = bundledBin ? versions[0] : null;
-  const systemEntries = systemCandidates
-    .map((c, i) => ({ bin: c, ver: versions[(bundledBin ? 1 : 0) + i] }))
-    .filter((e) => e.ver !== null);
-  const systemEntry = systemEntries[0] || null;
+  if (!bundledExists && !systemBin) return null;
+  if (!bundledExists) return systemBin;
+  if (!systemBin) return bundledBin;
 
-  if (!bundledVer && !systemEntry) return null;
-  if (!bundledVer) return systemEntry.bin;
-  if (!systemEntry) return bundledBin;
-
-  return _isNewer(systemEntry.ver, bundledVer) ? systemEntry.bin : bundledBin;
+  const [bundledVer, systemVer] = await Promise.all([
+    _probeVersion(bundledBin),
+    _probeVersion(systemBin),
+  ]);
+  return _isNewer(systemVer, bundledVer) ? systemBin : bundledBin;
 }
 
 async function getYtDlpPath() {
-  if (_cachedPath !== undefined) return _cachedPath;
-  _cachedPath = await _resolvePath();
-  return _cachedPath;
+  if (_cacheBinPath) {
+    if (_cachedPath !== undefined) return _cachedPath;
+    _cachedPath = await _resolvePath();
+    return _cachedPath;
+  }
+  return _resolvePath();
 }
 
 async function getYtDlpVersion(ytdlpPath) {
@@ -82,4 +101,11 @@ async function getFfmpegVersion() {
   });
 }
 
-module.exports = { getYtDlpPath, getYtDlpVersion, getFfmpegVersion, _parseVer, _isNewer };
+module.exports = {
+  getYtDlpPath,
+  getYtDlpVersion,
+  getFfmpegVersion,
+  setCacheBinPath,
+  _parseVer,
+  _isNewer,
+};

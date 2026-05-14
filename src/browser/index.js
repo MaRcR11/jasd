@@ -105,7 +105,7 @@ app.whenReady().then(() => {
   });
 
   dataIpc.register(settingsPath, queuePath);
-  toolsIpc.register(cookiePath, logPath);
+  toolsIpc.register(cookiePath, logPath, settingsPath);
   downloadIpc.register(win, cookiePath);
 
   ipcMain.handle('get-app-version', () => app.getVersion());

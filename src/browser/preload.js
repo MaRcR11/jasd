@@ -20,6 +20,7 @@ contextBridge.exposeInMainWorld('api', {
 
   loadSettings: () => ipcRenderer.invoke('load-settings'),
   saveSettings: (d) => ipcRenderer.invoke('save-settings', d),
+  setCacheBinPath: (enabled) => ipcRenderer.invoke('set-cache-bin-path', enabled),
   getDownloadsDir: () => ipcRenderer.invoke('get-downloads-dir'),
   loadQueue: () => ipcRenderer.invoke('load-queue'),
   saveQueue: (d) => ipcRenderer.invoke('save-queue', d),

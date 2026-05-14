@@ -35,6 +35,7 @@
   label_log_file: 'ملف السجل',
   label_always_overwrite: 'دائماً الكتابة فوق',
   label_prefer_opus: 'تفضيل صوت Opus',
+  label_cache_bin_path: 'تخزين مسار yt-dlp مؤقتاً عند بدء التشغيل',
   label_max_concurrent: 'التنزيلات المتوازية',
   label_custom_colors: 'ألوان مخصصة',
   mode_video: 'فيديو + صوت',
