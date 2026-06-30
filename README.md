@@ -57,9 +57,5 @@ npm run build:linux    # AppImage + deb
 
 ## License
 
-MIT + Commons Clause
-
-Permission is granted to use, copy, modify, and distribute this software for **non-commercial purposes** free of charge. You may **not** sell this software or offer it as a paid service without explicit written permission from the author.
-
-See the full [Commons Clause](https://commonsclause.com/) for details.
+Free for private personal use. Any other use requires a commercial license — see [LICENSE](LICENSE) for details.
 

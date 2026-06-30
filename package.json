@@ -4,7 +4,7 @@
   "description": "JASD — Just A Simple Downloader",
   "main": "src/browser/index.js",
   "author": "MaRcR11",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
