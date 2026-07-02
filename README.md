@@ -10,6 +10,18 @@ https://github.com/user-attachments/assets/5c1850ed-82ea-469e-8da7-43b389c09b85
 
 ---
 
+## Platform Support
+
+| Platform | Minimum Version | Architecture | Package |
+|----------|----------------|-------------|---------|
+| **Windows** | Windows 10 | x64 | NSIS installer (`.exe`) |
+| **macOS** | macOS 10.15 Catalina | x64 (Intel), arm64 (Apple Silicon) | DMG (`.dmg`) |
+| **Linux** | Ubuntu 18.04 / Fedora 32 / Debian 10 | x64 | AppImage (`.AppImage`), Debian package (`.deb`) |
+
+> Windows 7, 8, and 8.1 are **not supported** — Electron 23+ requires Windows 10 or later.
+
+---
+
 ## Quick Start
 
 ### 1. Dependencies
