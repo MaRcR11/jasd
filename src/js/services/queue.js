@@ -20,7 +20,7 @@ export function updateBadge() {
   ).length;
   const badge = document.getElementById('queueBadge');
   badge.style.display = n > 0 ? '' : 'none';
-  badge.textContent = n;
+  badge.textContent = n > 99 ? '99+' : n;
 }
 
 export function updateEmptyState() {
