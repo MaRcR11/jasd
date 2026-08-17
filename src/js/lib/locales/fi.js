@@ -25,6 +25,7 @@
   label_video_audio_q: 'Äänenkuvanlaatu',
   label_embed_thumb: 'Upota pikkukuva',
   label_embed_meta: 'Upota metatiedot',
+  label_embed_subs: 'Upota tekstitykset',
   label_filename: 'Mukautettu tiedostonimi',
   label_rate: 'Nopeuslimitti',
   label_playlist: 'Soittolistatiedostot',

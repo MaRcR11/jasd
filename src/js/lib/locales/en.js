@@ -25,6 +25,7 @@
   label_video_audio_q: 'Audio Quality',
   label_embed_thumb: 'Embed Thumbnail',
   label_embed_meta: 'Embed Metadata',
+  label_embed_subs: 'Embed Subtitles',
   label_filename: 'Custom Filename',
   label_rate: 'Rate Limit',
   label_playlist: 'Playlist Items',

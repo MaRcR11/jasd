@@ -25,6 +25,7 @@
   label_video_audio_q: 'Chất lượng âm thanh',
   label_embed_thumb: 'Nhúng hình thu nhỏ',
   label_embed_meta: 'Nhúng siêu dữ liệu',
+  label_embed_subs: 'Nhúng phụ đề',
   label_filename: 'Tên tệp tùy chỉnh',
   label_rate: 'Giới hạn tốc độ',
   label_playlist: 'Mục danh sách phát',

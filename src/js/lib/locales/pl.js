@@ -25,6 +25,7 @@
   label_video_audio_q: 'Jakość audio',
   label_embed_thumb: 'Osadź miniaturę',
   label_embed_meta: 'Osadź metadane',
+  label_embed_subs: 'Osadź napisy',
   label_filename: 'Własna nazwa pliku',
   label_rate: 'Limit prędkości',
   label_playlist: 'Elementy playlisty',

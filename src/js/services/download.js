@@ -148,6 +148,7 @@ export async function startDownload() {
       preferOpus: !!S.settings.preferOpus,
       embedThumbnail: document.getElementById('chkThumb').checked,
       addMetadata: document.getElementById('chkMeta').checked,
+      writeSubs: document.getElementById('chkSubs').checked,
       rateLimit: document.getElementById('rateLimit').value.trim() || null,
       container,
       forceOverwrite: !!S.settings.alwaysOverwrite,
@@ -307,6 +308,8 @@ export function setMode(mode) {
   document.getElementById('audioSection').style.display = S.audioOnly ? '' : 'none';
   const vaqRow = document.getElementById('videoAudioQualRow');
   if (vaqRow) vaqRow.style.display = S.audioOnly ? 'none' : '';
+  const subsRow = document.getElementById('chkSubsRow');
+  if (subsRow) subsRow.style.display = S.audioOnly ? 'none' : '';
 }
 
 export function wireDownloadEvents() {

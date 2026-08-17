@@ -25,6 +25,7 @@
   label_video_audio_q: '오디오 품질',
   label_embed_thumb: '썸네일 삽입',
   label_embed_meta: '메타데이터 삽입',
+  label_embed_subs: '자막 삽입',
   label_filename: '파일 이름',
   label_rate: '속도 제한',
   label_playlist: '재생목록 항목',

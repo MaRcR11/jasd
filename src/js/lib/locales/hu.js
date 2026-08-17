@@ -25,6 +25,7 @@
   label_video_audio_q: 'Hangminőség',
   label_embed_thumb: 'Bélyegkép beágyazása',
   label_embed_meta: 'Metaadatok beágyazása',
+  label_embed_subs: 'Feliratok beágyazása',
   label_filename: 'Egyéni fájlnév',
   label_rate: 'Sebességkorlát',
   label_playlist: 'Lejátszási lista elemei',

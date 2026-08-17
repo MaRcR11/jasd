@@ -25,6 +25,7 @@
   label_video_audio_q: 'คุณภาพเสียง',
   label_embed_thumb: 'ฝังรูปขนาดย่อ',
   label_embed_meta: 'ฝังข้อมูลเมตา',
+  label_embed_subs: 'ฝังคำบรรยาย',
   label_filename: 'ชื่อไฟล์กำหนดเอง',
   label_rate: 'จำกัดความเร็ว',
   label_playlist: 'รายการเพลย์ลิสต์',

@@ -25,6 +25,7 @@
   label_video_audio_q: 'Lydkvalitet',
   label_embed_thumb: 'Bygg inn miniatyrbilde',
   label_embed_meta: 'Bygg inn metadata',
+  label_embed_subs: 'Bygg inn undertekster',
   label_filename: 'Egendefinert filnavn',
   label_rate: 'Hastighetsbegrensning',
   label_playlist: 'Spillelisteelementer',

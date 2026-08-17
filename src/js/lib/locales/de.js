@@ -25,6 +25,7 @@
   label_video_audio_q: 'Audioqualität',
   label_embed_thumb: 'Thumbnail einbetten',
   label_embed_meta: 'Metadaten einbetten',
+  label_embed_subs: 'Untertitel einbetten',
   label_filename: 'Dateiname',
   label_rate: 'Tempolimit',
   label_playlist: 'Playlist-Elemente',

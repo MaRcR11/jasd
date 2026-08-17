@@ -25,6 +25,7 @@
   label_video_audio_q: 'Ποιότητα ήχου',
   label_embed_thumb: 'Ενσωμάτωση μικρογραφίας',
   label_embed_meta: 'Ενσωμάτωση μεταδεδομένων',
+  label_embed_subs: 'Ενσωμάτωση υποτίτλων',
   label_filename: 'Προσαρμοσμένο όνομα αρχείου',
   label_rate: 'Όριο ρυθμού',
   label_playlist: 'Στοιχεία λίστας',

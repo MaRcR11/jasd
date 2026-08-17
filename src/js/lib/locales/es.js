@@ -25,6 +25,7 @@
   label_video_audio_q: 'Calidad de audio',
   label_embed_thumb: 'Incrustar miniatura',
   label_embed_meta: 'Incrustar metadatos',
+  label_embed_subs: 'Incrustar subtítulos',
   label_filename: 'Nombre de archivo',
   label_rate: 'Límite de velocidad',
   label_playlist: 'Elementos de lista',

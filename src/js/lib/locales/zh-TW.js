@@ -25,6 +25,7 @@
   label_video_audio_q: '音訊品質',
   label_embed_thumb: '嵌入縮圖',
   label_embed_meta: '嵌入中繼資料',
+  label_embed_subs: '嵌入字幕',
   label_filename: '自訂檔案名稱',
   label_rate: '速率限制',
   label_playlist: '播放清單項目',

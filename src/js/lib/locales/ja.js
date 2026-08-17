@@ -25,6 +25,7 @@
   label_video_audio_q: '音質',
   label_embed_thumb: 'サムネイルを埋め込む',
   label_embed_meta: 'メタデータを埋め込む',
+  label_embed_subs: '字幕を埋め込む',
   label_filename: 'カスタムファイル名',
   label_rate: '速度制限',
   label_playlist: 'プレイリスト項目',
