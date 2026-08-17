@@ -51,7 +51,9 @@ function register(cookiePath, logPath, settingsPath) {
       } catch {}
     }
     writeLog(
-      `Tools check: yt-dlp=${ytdlpVersion || 'not found'}, ffmpeg=${ffmpegVersion || 'not found'}, cookies=${hasCookies}`
+      `Tools check: yt-dlp=${ytdlpVersion || 'not found'}, ffmpeg=${
+        ffmpegVersion || 'not found'
+      }, cookies=${hasCookies}`
     );
     return { ytdlpVersion, ffmpegVersion, hasCookies, cookieSize, cookiePath };
   });

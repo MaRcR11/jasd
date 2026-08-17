@@ -75,8 +75,9 @@ export function setView(name) {
 export function showPlaylistOverwriteModal(conflictCount, totalCount) {
   return new Promise((resolve) => {
     const overlay = document.getElementById('playlistOverwriteModal');
-    document.getElementById('plOwMsg').textContent =
-      `${conflictCount} of ${totalCount} files already exist in the output folder.`;
+    document.getElementById(
+      'plOwMsg'
+    ).textContent = `${conflictCount} of ${totalCount} files already exist in the output folder.`;
     overlay.style.display = 'flex';
 
     const cleanup = (choice) => {

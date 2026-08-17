@@ -269,6 +269,8 @@ export function setupSettingsListeners() {
     const { applyLang } = await import('../lib/i18n.js');
     applyLang();
     _retranslateUpdateStatus();
+    const { renderQueue } = await import('./queue.js');
+    renderQueue();
   });
 
   document.getElementById('settTheme').addEventListener('change', async (e) => {

@@ -1,18 +1,22 @@
 ﻿import { S } from '../state.js';
 import { escHtml, formatTs, formatBytes } from '../lib/formatters.js';
 import { syncOverlayToView, refreshOverlay } from '../components/ui.js';
+import { t } from '../lib/i18n.js';
 
 const STATUS_MAP = {
-  queued: { label: 'Queued', cls: 'queued', color: 'var(--text3)' },
+  queued: { cls: 'queued', color: 'var(--text3)' },
   downloading: {
-    label: 'Downloading',
     cls: 'downloading',
     color: 'linear-gradient(90deg,var(--accent),#7c5cf6)',
   },
-  done: { label: 'Done', cls: 'done', color: 'var(--success)' },
-  error: { label: 'Error', cls: 'error', color: 'var(--danger)' },
-  cancelled: { label: 'Cancelled', cls: 'cancelled', color: 'var(--text3)' },
+  done: { cls: 'done', color: 'var(--success)' },
+  error: { cls: 'error', color: 'var(--danger)' },
+  cancelled: { cls: 'cancelled', color: 'var(--text3)' },
 };
+
+function statusLabel(status) {
+  return t(`status_${status}`);
+}
 
 export function updateBadge() {
   const n = S.queue.filter(
@@ -258,23 +262,23 @@ export function buildQueueEl(item, isChild = false) {
         <div class="qi-pw"><div class="qi-p" style="width:0%"></div></div>
         <span class="qi-badge">…</span>
         <div class="qi-btns">
-          <button class="qi-cancel" style="display:none" title="Cancel download">
+          <button class="qi-cancel" style="display:none" title="${t('title_cancel_download')}">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/>
             </svg>
           </button>
-          <button class="qi-retry" style="display:none" title="Retry download">
+          <button class="qi-retry" style="display:none" title="${t('title_retry_download')}">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M2 8a6 6 0 1 0 1-3.3"/>
               <polyline points="2,2 2,5 5,5"/>
             </svg>
           </button>
-          <button class="qi-play" style="display:none" title="Play file">
+          <button class="qi-play" style="display:none" title="${t('title_play_file')}">
             <svg viewBox="0 0 16 16" fill="currentColor">
               <polygon points="4,2 13,8 4,14"/>
             </svg>
           </button>
-          <button class="qi-action" style="display:none">Open</button>
+          <button class="qi-action" style="display:none">${t('btn_open_folder')}</button>
         </div>
       </div>
       <div class="qi-status"></div>
@@ -296,7 +300,7 @@ export function updateQueueEl(el, item) {
   const s = STATUS_MAP[item.status] || STATUS_MAP.queued;
   p.style.width = `${item.percent || 0}%`;
   p.style.background = s.color;
-  badge.textContent = s.label;
+  badge.textContent = statusLabel(item.status);
   badge.className = `qi-badge ${s.cls}`;
 
   if (item.status === 'downloading') {
@@ -309,9 +313,9 @@ export function updateQueueEl(el, item) {
     if (item.outputFileSize != null) parts.push(formatBytes(item.outputFileSize));
     stat.textContent = parts.join(' · ');
   } else if (item.status === 'queued') {
-    stat.textContent = 'Waiting…';
+    stat.textContent = t('queue_waiting');
   } else if (item.status === 'error') {
-    stat.textContent = 'Download failed';
+    stat.textContent = t('queue_download_failed');
   } else {
     stat.textContent = '';
   }
@@ -319,11 +323,11 @@ export function updateQueueEl(el, item) {
   if (cancelBtn) {
     if (item.status === 'downloading') {
       cancelBtn.style.display = '';
-      cancelBtn.title = 'Cancel download';
+      cancelBtn.title = t('title_cancel_download');
       cancelBtn.onclick = () => cancelSpecific(item.id);
     } else if (item.status === 'queued') {
       cancelBtn.style.display = '';
-      cancelBtn.title = 'Remove from queue';
+      cancelBtn.title = t('title_remove_from_queue');
       cancelBtn.onclick = () => removeFromQueue(item.id);
     } else {
       cancelBtn.style.display = 'none';
@@ -332,6 +336,7 @@ export function updateQueueEl(el, item) {
   }
 
   if (playBtn) {
+    playBtn.title = t('title_play_file');
     if (item.status === 'done' && item.outputFile) {
       playBtn.style.display = '';
       playBtn.onclick = async () => {
@@ -339,7 +344,7 @@ export function updateQueueEl(el, item) {
         if (err) {
           const stat = el.querySelector('.qi-status');
           if (stat) {
-            stat.textContent = 'File not found — it may have been moved or deleted.';
+            stat.textContent = t('queue_file_not_found');
             stat.style.color = 'var(--danger)';
             setTimeout(() => {
               stat.style.color = '';
@@ -357,17 +362,18 @@ export function updateQueueEl(el, item) {
 
   if (item.status === 'done' && item.outputDir) {
     act.style.display = '';
-    act.textContent = 'Open';
+    act.textContent = t('btn_open_folder');
     act.onclick = () => window.api.openFolder(item.outputDir);
   } else if (item.status === 'done' || item.status === 'cancelled' || item.status === 'error') {
     act.style.display = '';
-    act.textContent = 'Remove';
+    act.textContent = t('btn_remove');
     act.onclick = () => removeFromQueue(item.id);
   } else {
     act.style.display = 'none';
   }
 
   if (retryBtn) {
+    retryBtn.title = t('title_retry_download');
     if ((item.status === 'error' || item.status === 'cancelled') && item.opts) {
       retryBtn.style.display = '';
       retryBtn.onclick = () => {
@@ -452,28 +458,30 @@ function buildGroupEl(group, children) {
       <div class="qi-title">${escHtml(group.title)}</div>
       <div class="qi-row">
         <div class="qi-pw"><div class="qi-p" style="width:0%"></div></div>
-        <span class="qi-badge queued">Queued</span>
+        <span class="qi-badge queued">${t('status_queued')}</span>
         <div class="qi-btns">
-          <button class="qi-cancel" title="Cancel all downloads">
+          <button class="qi-cancel" title="${t('title_cancel_all')}">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/>
             </svg>
           </button>
-          <button class="qi-retry" style="display:none" title="Retry all">
+          <button class="qi-retry" style="display:none" title="${t('title_retry_all')}">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M2 8a6 6 0 1 0 1-3.3"/>
               <polyline points="2,2 2,5 5,5"/>
             </svg>
           </button>
           <button class="qi-action" style="display:none"></button>
-          <button class="qi-expand" title="Show items" ${children.length === 0 ? 'style="display:none"' : ''}>
+          <button class="qi-expand" title="${t('title_show_items')}" ${
+    children.length === 0 ? 'style="display:none"' : ''
+  }>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <polyline points="6 9 12 15 18 9"/>
             </svg>
           </button>
         </div>
       </div>
-      <div class="qi-status">0 / ${children.length} done</div>
+      <div class="qi-status">0/${children.length}</div>
     </div>
   `;
   outer.appendChild(header);
@@ -506,7 +514,7 @@ function updateGroupEl(el, group) {
   const s = STATUS_MAP[group.status] || STATUS_MAP.queued;
   p.style.width = `${group.percent || 0}%`;
   p.style.background = s.color;
-  badge.textContent = s.label;
+  badge.textContent = statusLabel(group.status);
   badge.className = `qi-badge ${s.cls}`;
   const done = group.doneCount ?? 0;
   const total = group.totalCount ?? 0;
@@ -522,11 +530,13 @@ function updateGroupEl(el, group) {
   }
   const expandBtn = el.querySelector(':scope > .qi-group-header .qi-expand');
   if (expandBtn) {
+    expandBtn.title = t('title_show_items');
     const childCount = S.queue.filter((q) => q.parentId === group.id).length;
     expandBtn.style.display = childCount > 0 ? '' : 'none';
   }
   const retryBtn = el.querySelector(':scope > .qi-group-header .qi-retry');
   if (retryBtn) {
+    retryBtn.title = t('title_retry_all');
     if (group.status === 'cancelled' || group.status === 'error') {
       retryBtn.style.display = '';
       retryBtn.onclick = () => retryGroup(group.id);
@@ -537,6 +547,7 @@ function updateGroupEl(el, group) {
   }
   const cancelBtn = el.querySelector(':scope > .qi-group-header .qi-cancel');
   if (cancelBtn) {
+    cancelBtn.title = t('title_cancel_all');
     if (group.status === 'queued' || group.status === 'downloading') {
       cancelBtn.style.display = '';
       cancelBtn.onclick = () => cancelSpecific(group.id);
@@ -548,7 +559,7 @@ function updateGroupEl(el, group) {
   if (act) {
     if (['done', 'cancelled', 'error'].includes(group.status)) {
       act.style.display = '';
-      act.textContent = 'Remove';
+      act.textContent = t('btn_remove');
       act.onclick = () => removePlaylistGroup(group.id);
     } else {
       act.style.display = 'none';
