@@ -25,6 +25,7 @@
   label_video_audio_q: 'Kualitas Audio',
   label_embed_thumb: 'Sematkan Thumbnail',
   label_embed_meta: 'Sematkan Metadata',
+  label_embed_subs: 'Sematkan Subtitle',
   label_filename: 'Nama File Kustom',
   label_rate: 'Batas Kecepatan',
   label_playlist: 'Item Playlist',

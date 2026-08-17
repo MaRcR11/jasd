@@ -25,6 +25,7 @@
   label_video_audio_q: 'Audiokwaliteit',
   label_embed_thumb: 'Miniatuur insluiten',
   label_embed_meta: 'Metadata insluiten',
+  label_embed_subs: 'Ondertitels insluiten',
   label_filename: 'Aangepaste bestandsnaam',
   label_rate: 'Snelheidslimiet',
   label_playlist: 'Afspeellijstitems',

@@ -25,6 +25,7 @@
   label_video_audio_q: 'Kvaliteta zvuka',
   label_embed_thumb: 'Ugradi sličicu',
   label_embed_meta: 'Ugradi metapodatke',
+  label_embed_subs: 'Ugradi titlove',
   label_filename: 'Prilagođeni naziv datoteke',
   label_rate: 'Ograničenje brzine',
   label_playlist: 'Stavke popisa za reprodukciju',

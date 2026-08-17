@@ -139,6 +139,7 @@ function register(mainWindow, cookiePath) {
       preferOpus,
       embedThumbnail,
       addMetadata,
+      writeSubs,
       playlistItems,
       rateLimit,
       customFilename,
@@ -214,6 +215,7 @@ function register(mainWindow, cookiePath) {
 
     if (embedThumbnail) args.push('--embed-thumbnail');
     if (addMetadata) args.push('--add-metadata', '--embed-metadata');
+    if (writeSubs && !audioOnly) args.push('--write-subs', '--write-auto-subs', '--embed-subs');
     if (rateLimit) args.push('-r', rateLimit);
     if (playlistItems) args.push('--playlist-items', playlistItems);
     args.push('--no-abort-on-error');

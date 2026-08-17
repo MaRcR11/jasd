@@ -25,6 +25,7 @@
   label_video_audio_q: 'جودة الصوت',
   label_embed_thumb: 'تضمين الصورة المصغرة',
   label_embed_meta: 'تضمين البيانات الوصفية',
+  label_embed_subs: 'تضمين الترجمة',
   label_filename: 'اسم ملف مخصص',
   label_rate: 'حد السرعة',
   label_playlist: 'عناصر قائمة التشغيل',

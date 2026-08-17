@@ -25,6 +25,7 @@
   label_video_audio_q: 'Ses kalitesi',
   label_embed_thumb: 'Küçük resim ekle',
   label_embed_meta: 'Meta veri ekle',
+  label_embed_subs: 'Altyazı ekle',
   label_filename: 'Özel dosya adı',
   label_rate: 'Hız sınırı',
   label_playlist: 'Oynatma listesi öğeleri',

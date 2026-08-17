@@ -25,6 +25,7 @@
   label_video_audio_q: 'Kvalita zvuku',
   label_embed_thumb: 'Vložiť miniatúru',
   label_embed_meta: 'Vložiť metadáta',
+  label_embed_subs: 'Vložiť titulky',
   label_filename: 'Vlastný názov súboru',
   label_rate: 'Limit rýchlosti',
   label_playlist: 'Položky zoznamu',

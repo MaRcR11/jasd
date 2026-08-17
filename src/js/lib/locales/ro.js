@@ -25,6 +25,7 @@
   label_video_audio_q: 'Calitate audio',
   label_embed_thumb: 'Înglobează miniatură',
   label_embed_meta: 'Înglobează metadate',
+  label_embed_subs: 'Înglobează subtitrări',
   label_filename: 'Nume fișier personalizat',
   label_rate: 'Limită de viteză',
   label_playlist: 'Elemente playlist',

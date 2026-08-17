@@ -25,6 +25,7 @@
   label_video_audio_q: 'Qualidade do áudio',
   label_embed_thumb: 'Incorporar miniatura',
   label_embed_meta: 'Incorporar metadados',
+  label_embed_subs: 'Incorporar legendas',
   label_filename: 'Nome do arquivo',
   label_rate: 'Limite de velocidade',
   label_playlist: 'Itens da playlist',

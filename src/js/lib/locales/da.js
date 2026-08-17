@@ -25,6 +25,7 @@
   label_video_audio_q: 'Lydkvalitet',
   label_embed_thumb: 'Integrer miniature',
   label_embed_meta: 'Integrer metadata',
+  label_embed_subs: 'Integrer undertekster',
   label_filename: 'Brugerdefineret filnavn',
   label_rate: 'Hastighedsgrænse',
   label_playlist: 'Afspilningslisteelementer',

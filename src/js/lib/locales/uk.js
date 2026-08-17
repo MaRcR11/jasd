@@ -25,6 +25,7 @@
   label_video_audio_q: 'Якість звуку',
   label_embed_thumb: 'Вбудувати мініатюру',
   label_embed_meta: 'Вбудувати метадані',
+  label_embed_subs: 'Вбудувати субтитри',
   label_filename: 'Власна назва файлу',
   label_rate: 'Обмеження швидкості',
   label_playlist: 'Елементи плейлиста',

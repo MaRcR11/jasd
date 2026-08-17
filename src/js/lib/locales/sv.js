@@ -25,6 +25,7 @@
   label_video_audio_q: 'Ljudkvalitet',
   label_embed_thumb: 'Bädda in miniatyrbild',
   label_embed_meta: 'Bädda in metadata',
+  label_embed_subs: 'Bädda in undertexter',
   label_filename: 'Anpassat filnamn',
   label_rate: 'Hastighetsgräns',
   label_playlist: 'Spellista-objekt',
