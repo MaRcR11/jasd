@@ -37,6 +37,7 @@
   label_always_overwrite: 'Sempre Substituir',
   label_prefer_opus: 'Preferir Áudio Opus',
   label_cache_bin_path: 'Armazenar caminho do yt-dlp na inicialização',
+  label_no_check_certificate: 'Ignorar verificação de certificado SSL',
   label_max_concurrent: 'Downloads Paralelos',
   label_custom_colors: 'Cores Personalizadas',
   mode_video: 'Vídeo + Áudio',

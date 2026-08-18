@@ -159,7 +159,9 @@ body::after {
   font-size: 13px;
   font-weight: 500;
   color: var(--text2);
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   white-space: nowrap;
 }
 .nav-item svg {
@@ -220,7 +222,8 @@ body::after {
   overflow-y: auto;
   padding: 20px;
   gap: 14px;
-  background: linear-gradient(var(--bg) 30%, transparent) center top / 100% 40px no-repeat local,
+  background:
+    linear-gradient(var(--bg) 30%, transparent) center top / 100% 40px no-repeat local,
     linear-gradient(transparent, var(--bg) 70%) center bottom / 100% 40px no-repeat local,
     radial-gradient(farthest-side at 50% 0%, rgba(0, 0, 0, 0.28), transparent) center top / 100%
       14px no-repeat scroll,
@@ -245,7 +248,8 @@ body::after {
   gap: 14px;
   /* bottom padding so content doesn't hide behind sticky footer */
   padding-bottom: 8px;
-  background: linear-gradient(var(--bg) 30%, transparent) center top / 100% 40px no-repeat local,
+  background:
+    linear-gradient(var(--bg) 30%, transparent) center top / 100% 40px no-repeat local,
     linear-gradient(transparent, var(--bg) 70%) center bottom / 100% 40px no-repeat local,
     radial-gradient(farthest-side at 50% 0%, rgba(0, 0, 0, 0.28), transparent) center top / 100%
       14px no-repeat scroll,
@@ -272,7 +276,9 @@ body::after {
   border: 1.5px solid var(--border);
   border-radius: var(--r);
   padding: 0 4px 0 14px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 .url-bar:focus-within {
   border-color: var(--accent);
@@ -305,7 +311,9 @@ body::after {
   align-items: center;
   justify-content: center;
   color: var(--text2);
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 .btn-icon svg {
   width: 15px;
@@ -326,7 +334,9 @@ body::after {
   font-size: 13px;
   font-weight: 600;
   flex-shrink: 0;
-  transition: background 0.15s, transform 0.1s;
+  transition:
+    background 0.15s,
+    transform 0.1s;
 }
 .btn-fetch svg {
   width: 13px;
@@ -491,7 +501,8 @@ body::after {
 .pl-list {
   max-height: 260px;
   overflow-y: auto;
-  background: linear-gradient(var(--bg2) 30%, transparent) center top / 100% 36px no-repeat local,
+  background:
+    linear-gradient(var(--bg2) 30%, transparent) center top / 100% 36px no-repeat local,
     linear-gradient(transparent, var(--bg2) 70%) center bottom / 100% 36px no-repeat local,
     radial-gradient(farthest-side at 50% 0%, rgba(0, 0, 0, 0.28), transparent) center top / 100%
       12px no-repeat scroll,
@@ -564,7 +575,9 @@ body::after {
   color: var(--text2);
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
-  transition: color 0.15s, border-color 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
 }
 .tab:hover {
   color: var(--text);
@@ -634,7 +647,9 @@ body::after {
   border-radius: var(--rsm);
   font-size: 12.5px;
   font-family: var(--mono);
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 .txt-input:focus {
   border-color: var(--accent);
@@ -665,7 +680,10 @@ body::after {
   font-weight: 500;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 }
 .btn-secondary:hover {
   background: var(--bg3);
@@ -708,7 +726,9 @@ body::after {
   font-size: 12.5px;
   font-weight: 500;
   color: var(--text2);
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   white-space: nowrap;
 }
 .tgl.active {
@@ -744,7 +764,9 @@ body::after {
   border: 1px solid var(--bord2);
   border-radius: 10px;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 .slider::before {
   content: '';
@@ -755,7 +777,9 @@ body::after {
   top: 3px;
   background: var(--text3);
   border-radius: 50%;
-  transition: transform 0.2s, background 0.2s;
+  transition:
+    transform 0.2s,
+    background 0.2s;
 }
 .switch input:checked + .slider {
   background: var(--accent);
@@ -781,7 +805,10 @@ body::after {
   font-weight: 600;
   letter-spacing: 0.02em;
   box-shadow: 0 4px 16px rgba(91, 124, 246, 0.25);
-  transition: opacity 0.15s, transform 0.1s, box-shadow 0.2s;
+  transition:
+    opacity 0.15s,
+    transform 0.1s,
+    box-shadow 0.2s;
 }
 .btn-download svg {
   width: 17px;
@@ -839,7 +866,10 @@ body::after {
   color: var(--text2);
   background: var(--bg4);
   border: 1px solid var(--border);
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 }
 .btn-icon-sm svg {
   width: 10px;
@@ -895,7 +925,9 @@ body::after {
   color: var(--text2);
   padding: 5px 10px;
   border-radius: var(--rsm);
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 .btn-text:hover {
   background: var(--bg3);
@@ -1015,7 +1047,9 @@ body::after {
   color: var(--text3);
   padding: 4px 8px;
   border-radius: 4px;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 .qi-action:hover {
   background: var(--bg3);
@@ -1039,7 +1073,10 @@ body::after {
   border-radius: 4px;
   border: 1px solid transparent;
   color: var(--text3);
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 }
 .qi-cancel svg {
   width: 9px;
@@ -1062,7 +1099,10 @@ body::after {
   border-radius: 4px;
   border: 1px solid transparent;
   color: var(--text3);
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 }
 .qi-retry svg {
   width: 13px;
@@ -1085,7 +1125,10 @@ body::after {
   border-radius: 4px;
   border: 1px solid transparent;
   color: var(--text3);
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
 }
 .qi-play svg {
   width: 11px;
@@ -1145,7 +1188,9 @@ body::after {
   border-radius: 4px;
   border: 1px solid transparent;
   color: var(--text3);
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 .qi-expand svg {
   width: 14px;

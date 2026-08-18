@@ -37,6 +37,7 @@
   label_always_overwrite: 'Her zaman üzerine yaz',
   label_prefer_opus: 'Opus ses tercih et',
   label_cache_bin_path: 'Başlangıçta yt-dlp yolunu önbelleğe al',
+  label_no_check_certificate: 'SSL sertifika doğrulamasını atla',
   label_max_concurrent: 'Paralel indirmeler',
   label_custom_colors: 'Özel renkler',
   mode_video: 'Video + Ses',

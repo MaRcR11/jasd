@@ -37,6 +37,7 @@
   label_always_overwrite: 'Skriv alltid över',
   label_prefer_opus: 'Föredra Opus-ljud',
   label_cache_bin_path: 'Cacha yt-dlp-sökväg vid start',
+  label_no_check_certificate: 'Hoppa över SSL-certifikatverifiering',
   label_max_concurrent: 'Parallella nedladdningar',
   label_custom_colors: 'Anpassade färger',
   mode_video: 'Video + Ljud',

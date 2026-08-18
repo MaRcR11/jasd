@@ -37,6 +37,7 @@
   label_always_overwrite: '始终覆盖',
   label_prefer_opus: '优先使用 Opus 音频',
   label_cache_bin_path: '启动时缓存 yt-dlp 路径',
+  label_no_check_certificate: '跳过 SSL 证书验证',
   label_max_concurrent: '并行下载',
   label_custom_colors: '自定义颜色',
   mode_video: '视频 + 音频',

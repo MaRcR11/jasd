@@ -37,6 +37,7 @@
   label_always_overwrite: 'Always Overwrite',
   label_prefer_opus: 'Prefer Opus Audio',
   label_cache_bin_path: 'Cache yt-dlp path on startup',
+  label_no_check_certificate: 'Skip SSL Certificate Verification',
   label_max_concurrent: 'Parallel Downloads',
   label_custom_colors: 'Custom Colors',
   mode_video: 'Video + Audio',

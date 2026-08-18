@@ -37,6 +37,7 @@
   label_always_overwrite: 'Всегда перезаписывать',
   label_prefer_opus: 'Предпочитать аудио Opus',
   label_cache_bin_path: 'Кэшировать путь yt-dlp при запуске',
+  label_no_check_certificate: 'Пропустить проверку SSL-сертификата',
   label_max_concurrent: 'Параллельные загрузки',
   label_custom_colors: 'Пользовательские цвета',
   mode_video: 'Видео + Аудио',

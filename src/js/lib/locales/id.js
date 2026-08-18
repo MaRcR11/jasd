@@ -37,6 +37,7 @@
   label_always_overwrite: 'Selalu Timpa',
   label_prefer_opus: 'Utamakan Audio Opus',
   label_cache_bin_path: 'Cache jalur yt-dlp saat mulai',
+  label_no_check_certificate: 'Lewati verifikasi sertifikat SSL',
   label_max_concurrent: 'Unduhan Paralel',
   label_custom_colors: 'Warna Kustom',
   mode_video: 'Video + Audio',
