@@ -37,6 +37,7 @@
   label_always_overwrite: 'Altijd overschrijven',
   label_prefer_opus: 'Geef voorkeur aan Opus-audio',
   label_cache_bin_path: 'yt-dlp-pad cachen bij opstarten',
+  label_no_check_certificate: 'SSL-certificaatverificatie overslaan',
   label_max_concurrent: 'Parallelle downloads',
   label_custom_colors: 'Aangepaste kleuren',
   mode_video: 'Video + Audio',

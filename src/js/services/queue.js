@@ -473,8 +473,8 @@ function buildGroupEl(group, children) {
           </button>
           <button class="qi-action" style="display:none"></button>
           <button class="qi-expand" title="${t('title_show_items')}" ${
-    children.length === 0 ? 'style="display:none"' : ''
-  }>
+            children.length === 0 ? 'style="display:none"' : ''
+          }>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <polyline points="6 9 12 15 18 9"/>
             </svg>

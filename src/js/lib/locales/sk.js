@@ -37,6 +37,7 @@
   label_always_overwrite: 'Vždy prepísať',
   label_prefer_opus: 'Preferovať Opus',
   label_cache_bin_path: 'Uložiť cestu yt-dlp do vyrovnávacej pamäte pri spustení',
+  label_no_check_certificate: 'Preskočiť overenie SSL certifikátu',
   label_max_concurrent: 'Súbežné sťahovanie',
   label_custom_colors: 'Vlastné farby',
   mode_video: 'Video + Zvuk',

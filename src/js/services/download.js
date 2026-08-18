@@ -23,7 +23,7 @@ export async function fetchInfo() {
   document.getElementById('btnFetch').disabled = true;
   document.getElementById('btnDownload').disabled = true;
 
-  const info = await window.api.fetchInfo(url);
+  const info = await window.api.fetchInfo(url, !!S.settings.noCheckCertificate);
 
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('btnFetch').disabled = false;
@@ -152,6 +152,7 @@ export async function startDownload() {
       rateLimit: document.getElementById('rateLimit').value.trim() || null,
       container,
       forceOverwrite: !!S.settings.alwaysOverwrite,
+      noCheckCertificate: !!S.settings.noCheckCertificate,
       customFilename: null,
     };
 
@@ -278,6 +279,7 @@ export async function startDownload() {
     container,
     downloadId,
     forceOverwrite,
+    noCheckCertificate: !!S.settings.noCheckCertificate,
   };
 
   const qItem = {

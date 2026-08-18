@@ -37,6 +37,7 @@
   label_always_overwrite: 'Uvijek prepiši',
   label_prefer_opus: 'Preferiraj Opus zvuk',
   label_cache_bin_path: 'Spremi put do yt-dlp pri pokretanju',
+  label_no_check_certificate: 'Preskoči provjeru SSL certifikata',
   label_max_concurrent: 'Paralelna preuzimanja',
   label_custom_colors: 'Prilagođene boje',
   mode_video: 'Video + Zvuk',

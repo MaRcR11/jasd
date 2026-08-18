@@ -37,6 +37,7 @@
   label_always_overwrite: '一律覆寫',
   label_prefer_opus: '優先使用 Opus 音訊',
   label_cache_bin_path: '啟動時快取 yt-dlp 路徑',
+  label_no_check_certificate: '略過 SSL 憑證驗證',
   label_max_concurrent: '平行下載',
   label_custom_colors: '自訂顏色',
   mode_video: '影片 + 音訊',

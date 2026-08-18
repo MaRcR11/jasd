@@ -37,6 +37,7 @@
   label_always_overwrite: 'Korvaa aina',
   label_prefer_opus: 'Suosi Opus-ääntä',
   label_cache_bin_path: 'Tallenna yt-dlp-polku välimuistiin käynnistyksessä',
+  label_no_check_certificate: 'Ohita SSL-varmenteen tarkistus',
   label_max_concurrent: 'Rinnakkaiset lataukset',
   label_custom_colors: 'Mukautetut värit',
   mode_video: 'Video + Ääni',

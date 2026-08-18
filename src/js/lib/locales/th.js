@@ -37,6 +37,7 @@
   label_always_overwrite: 'เขียนทับเสมอ',
   label_prefer_opus: 'ใช้เสียง Opus',
   label_cache_bin_path: 'แคชเส้นทาง yt-dlp เมื่อเริ่มต้น',
+  label_no_check_certificate: 'ข้ามการตรวจสอบใบรับรอง SSL',
   label_max_concurrent: 'ดาวน์โหลดพร้อมกัน',
   label_custom_colors: 'สีกำหนดเอง',
   mode_video: 'วิดีโอ + เสียง',

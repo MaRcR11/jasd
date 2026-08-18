@@ -15,6 +15,8 @@ export function applySettings() {
   if (chkOpus) chkOpus.checked = !!S.settings.preferOpus;
   const chkCache = document.getElementById('chkCacheBinPath');
   if (chkCache) chkCache.checked = !!S.settings.cacheBinPath;
+  const chkNoCert = document.getElementById('chkNoCheckCertificate');
+  if (chkNoCert) chkNoCert.checked = !!S.settings.noCheckCertificate;
   const themeEl = document.getElementById('settTheme');
   if (themeEl && S.settings.theme) themeEl.value = S.settings.theme;
   const mcEl = document.getElementById('settMaxConcurrent');
@@ -303,6 +305,13 @@ export function setupSettingsListeners() {
     });
   }
 
+  const chkNoCert = document.getElementById('chkNoCheckCertificate');
+  if (chkNoCert) {
+    chkNoCert.addEventListener('change', async (e) => {
+      await saveSetting('noCheckCertificate', e.target.checked);
+    });
+  }
+
   const mcEl = document.getElementById('settMaxConcurrent');
   if (mcEl) {
     mcEl.addEventListener('change', async (e) => {
@@ -374,6 +383,7 @@ export function setupSettingsListeners() {
       outputDir: S._downloadsDir || '',
       alwaysOverwrite: false,
       preferOpus: false,
+      noCheckCertificate: false,
       maxConcurrent: 1,
       theme: 'dark',
       lang: 'auto',

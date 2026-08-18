@@ -37,6 +37,7 @@
   label_always_overwrite: 'Luôn ghi đè',
   label_prefer_opus: 'Ưu tiên âm thanh Opus',
   label_cache_bin_path: 'Lưu đường dẫn yt-dlp khi khởi động',
+  label_no_check_certificate: 'Bỏ qua xác minh chứng chỉ SSL',
   label_max_concurrent: 'Tải xuống song song',
   label_custom_colors: 'Màu tùy chỉnh',
   mode_video: 'Video + Âm thanh',

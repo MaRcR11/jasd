@@ -11,7 +11,8 @@ contextBridge.exposeInMainWorld('api', {
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   checkTools: () => ipcRenderer.invoke('check-tools'),
   checkForUpdate: () => ipcRenderer.invoke('check-for-update'),
-  fetchInfo: (url) => ipcRenderer.invoke('fetch-info', url),
+  fetchInfo: (url, noCheckCertificate) =>
+    ipcRenderer.invoke('fetch-info', url, noCheckCertificate),
   pickFolder: () => ipcRenderer.invoke('pick-folder'),
   startDownload: (opts) => ipcRenderer.invoke('start-download', opts),
   cancelDownload: (id) => ipcRenderer.send('cancel-download', id),

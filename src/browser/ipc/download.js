@@ -28,13 +28,14 @@ const activeDownloads = new Map();
 const cancelledIds = new Set();
 
 function register(mainWindow, cookiePath) {
-  ipcMain.handle('fetch-info', async (_e, url) => {
+  ipcMain.handle('fetch-info', async (_e, url, noCheckCertificate) => {
     const ytdlp = await getYtDlpPath();
     if (!ytdlp) return { error: 'yt-dlp not found. Install it and place it in the bin/ folder.' };
     writeLog(`Fetching info: ${url}`);
 
     return new Promise((resolve) => {
       const args = ['--dump-single-json', '--flat-playlist'];
+      if (noCheckCertificate) args.push('--no-check-certificate');
       if (fs.existsSync(cookiePath)) args.push('--cookies', cookiePath);
       args.push(url);
 
@@ -146,6 +147,7 @@ function register(mainWindow, cookiePath) {
       downloadId,
       container,
       forceOverwrite,
+      noCheckCertificate,
     } = opts;
 
     const outDir = outputDir || path.join(os.homedir(), 'Downloads');
@@ -168,6 +170,10 @@ function register(mainWindow, cookiePath) {
 
     if (forceOverwrite) {
       args.push('--force-overwrites');
+    }
+
+    if (noCheckCertificate) {
+      args.push('--no-check-certificate');
     }
 
     if (audioOnly) {

@@ -37,6 +37,7 @@
   label_always_overwrite: 'Mindig felülírás',
   label_prefer_opus: 'Opus hang előnyben részesítése',
   label_cache_bin_path: 'yt-dlp elérési út gyorsítótárazása indításkor',
+  label_no_check_certificate: 'SSL-tanúsítvány ellenőrzésének kihagyása',
   label_max_concurrent: 'Párhuzamos letöltések',
   label_custom_colors: 'Egyéni színek',
   mode_video: 'Videó + Hang',

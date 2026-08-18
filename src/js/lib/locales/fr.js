@@ -37,6 +37,7 @@
   label_always_overwrite: 'Toujours écraser',
   label_prefer_opus: "Préférer l'audio Opus",
   label_cache_bin_path: 'Mettre en cache le chemin yt-dlp au démarrage',
+  label_no_check_certificate: 'Ignorer la vérification du certificat SSL',
   label_max_concurrent: 'Téléchargements parallèles',
   label_custom_colors: 'Couleurs personnalisées',
   mode_video: 'Vidéo + Audio',
