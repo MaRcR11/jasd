@@ -22,7 +22,7 @@
     "electron-builder": "^24.13.3",
     "prettier": "^3.8.1",
     "sharp": "^0.34.5",
-    "vitest": "^2.0.0"
+    "vitest": "^3.2.6"
   },
   "build": {
     "appId": "com.jasd.downloader",
